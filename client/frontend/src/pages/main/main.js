@@ -115,7 +115,7 @@ const Main = () => {
       {/* Navbar at the bottom */}
       <div className="nav-bar">
         <span className="nav-item" onClick={() => navigate("/main")}>🏠 Home</span>
-        <span className="nav-item">🤖 Chatbot</span>
+        <span className="nav-item" onClick={() => navigate("/checklist")}>📋 To-Do List</span>
         <span className="nav-item" onClick={() => navigate("/profile")}>📅 Timetable</span>
         <span className="nav-item">⋮ More</span>
       </div>
