@@ -1,3 +1,4 @@
+/* General Reset */
 * {
     margin: 0;
     padding: 0;
@@ -23,9 +24,7 @@ body {
     margin-bottom: 30px;
     position: relative;
     left: -20px; /* Adjust this value as needed to shift left */
-    
 }
-
 
 /* Profile Container */
 .profile-container {
@@ -36,8 +35,8 @@ body {
     gap: 30px;
 }
 
-/* Calendar Card - moved to middle column */
-.card:not(.stats-card) {
+/* Calendar Card */
+.card {
     background: #fff;
     padding: 20px;
     border-radius: 10px;
@@ -48,7 +47,7 @@ body {
     justify-self: center;
 }
 
-/* Stats Card - moved to rightmost column */
+/* Stats Card */
 .stats-card {
     background: #fff;
     padding: 20px;
@@ -90,7 +89,6 @@ body {
     cursor: pointer;
     color: #333;
     transition: background 0.2s;
-    z-index: 1;
 }
 
 .month-nav:hover {
@@ -99,17 +97,6 @@ body {
 
 .calendar {
     width: 100%;
-}
-
-.days-grid div.active {
-    background: rgba(26, 90, 125, 0.5);
-    color: #fff !important; /* Force white text to be visible */
-    font-weight: bold;
-}
-
-.days-grid div.highlight {
-    background: rgba(86, 173, 220, 0.4);
-    color: #000 !important; /* Force dark text to be visible */
 }
 
 .day-names, .days-grid {
@@ -136,10 +123,34 @@ body {
 }
 
 .days-grid div:hover {
-    background: rgba(86, 173, 220, 0.4); /* Add hover effect for better interaction */
+    background: rgba(86, 173, 220, 0.4); /* Hover effect */
     color: #000;
 }
 
+/* Highlighted Day */
+.days-grid div.active {
+    background: none !important; /* No background for active days */
+    border: 3px solid #1a5a7d !important; /* Border for selected day */
+    color: #1a5a7d !important; /* Day number color */
+    font-weight: bold; /* Keep the day number bold */
+    font-size: 20px; /* Slightly larger font for visibility */
+}
+
+/* Highlighted Days (for week or month view) */
+.days-grid div.highlight {
+    background: none !important; /* No background for highlighted days */
+    color: #1a5a7d !important; /* Keep the day number color */
+    font-weight: bold; /* Keep the number bold */
+}
+
+.day-number {
+    font-size: 18px; /* Adjust font size */
+    font-weight: bold;
+    color: inherit; /* Inherit color from parent */
+    z-index: 2; /* Ensure number appears above any other content */
+}
+
+/* Tabs */
 .tabs {
     display: flex;
     justify-content: space-around;
@@ -158,6 +169,7 @@ body {
     color: #1a5a7d;
 }
 
+/* Selected Date */
 .selected-date {
     font-size: 18px;
     font-weight: bold;
@@ -166,6 +178,7 @@ body {
     text-align: center;
 }
 
+/* Stat Box */
 .stat-box {
     display: flex;
     justify-content: space-between;
@@ -209,14 +222,14 @@ body {
     color: #4a90e2;
 }
 
-/* For responsive design on smaller screens */
+/* Responsive Design */
 @media (max-width: 1200px) {
     .profile-container {
         grid-template-columns: 1fr;
         justify-items: center;
     }
-    
-    .card:not(.stats-card), .stats-card {
+
+    .card, .stats-card {
         grid-column: auto;
         justify-self: center;
         margin-bottom: 20px;
