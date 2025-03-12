@@ -6,9 +6,10 @@ module.exports.insertStudySession = (data, callback) => {
         VALUES (?, ?, DATETIME('now', 'localtime'))
     `;
     const VALUES = [data.user_id, data.subject_id];
-    pool.query(SQLSTATEMENT, VALUES, (err, result) => {
+    pool.query(SQLSTATEMENT, VALUES, function (err, result) {
         if (err) return callback(err, null);
-        callback(null, { insertId: result.insertId });
+    
+        callback(null, { session_id: result.lastID });
     });
 };
 
@@ -34,4 +35,16 @@ module.exports.insertTotalTime = (data, callback) => {
     `;
     const VALUES = [data.time, data.session_id];
     pool.query(SQLSTATEMENT, VALUES, callback);
+};
+module.exports.insertNotes = (data, callback) => {
+    const SQLSTATEMENT = `
+        UPDATE Study_Sessions
+        SET notes = ?
+        WHERE id = ?;
+    `;
+    const VALUES = [data.notes,data.session_id];
+    pool.query(SQLSTATEMENT, VALUES, (err, result) => {
+        if (err) return callback(err, null);
+        callback(null, { insertId: result.insertId });
+    });
 };

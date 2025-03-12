@@ -20,7 +20,6 @@ module.exports.insertReview = (data, callback) => {
         callback(null, { review_id: result.lastID });
     });
 };
-modu
 module.exports.selectAllReviews = (callback) => {
     const SQLSTATEMENT = `
         SELECT *

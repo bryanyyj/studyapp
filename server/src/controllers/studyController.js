@@ -64,6 +64,7 @@ module.exports.endStudySession = (req, res, next) => {
 // DEFINE CONTROLLER FUNCTION TO CALCULATE TOTAL STUDY TIME
 // ##############################################################
 module.exports.calculateTotalStudyTime = (req, res, next) => {
+    
     const data = {
         session_id: req.body.session_id
     };
@@ -143,4 +144,30 @@ module.exports.getSessionById = (req, res, next) => {
     };
 
     model.selectStudySessionBySessionId(data, callback);
+};
+// ##############################################################
+// CONTROLLER FUNCTION TO STORE THE END TIME (TOTAL TIME)
+// ##############################################################
+module.exports.storeNotes = (req, res, next) => {
+    if (!req.body.session_id) {
+        return res.status(400).send("Missing required data (session_id).");
+    }
+    const data = {
+        notes: req.body.notes,
+        session_id:req.body.session_id
+    };
+
+    console.log("Calculated totalTime:", res.locals.totalTime);
+
+    const callback = (error, results) => {
+        if (error) {
+            console.error("Error storeEndTime:", error);
+            return res.status(500).json(error);
+        }
+        else{
+            next()
+        }
+    };
+
+    model.insertNotes(data, callback);
 };

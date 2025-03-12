@@ -61,6 +61,10 @@ const Review = () => {
       .then(([reviewResponse, aiResponse]) => {
         console.log('Review submitted:', reviewResponse);
         console.log('AI review processed:', aiResponse);
+  
+       
+        localStorage.setItem('review_id', reviewResponse.review_id);
+  
         alert('Review submitted successfully!');
         navigate("/profile");
       })
@@ -69,6 +73,7 @@ const Review = () => {
         alert('An error occurred. Please try again.');
       });
   };
+  
   
   return (
     <div className="body">

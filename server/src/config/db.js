@@ -62,6 +62,7 @@ db.serialize(() => {
       start_time DATETIME NOT NULL,
       end_time DATETIME,
       total_time INTEGER,
+      notes TEXT,
       FOREIGN KEY (user_id) REFERENCES users(id),
       FOREIGN KEY (subject_id) REFERENCES subjects(id)
     );
@@ -89,7 +90,6 @@ db.serialize(() => {
       scheduleSatisfaction INTEGER NOT NULL,
       sessionDuration INTEGER NOT NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      feedback TEXT,
       FOREIGN KEY (user_id) REFERENCES users(id)
     );
 
