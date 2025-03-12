@@ -21,57 +21,55 @@ const Review = () => {
   // Handle form submission
   const handleSubmitReview = (e) => {
     e.preventDefault();
-    // Example: Hard-coded sessionDuration of 45 minutes
-    // If you track the actual session length in state or props, use that instead
+  
     const reviewData = {
       sessionDuration: 45,
-      // This might store the "study session" rating as selectedEmoji
       rating: selectedEmoji,
-      // This might store "AI satisfaction" as selectedRating
       scheduleSatisfaction: selectedRating,
       feedback: feedback,
-      user_id: 1 // or wherever you get the logged-in user ID
+      user_id: 1 // Replace with dynamic user ID if applicable
     };
-
-    // The endpoint URL for creating a new review
-    const url = 'http://localhost:5000/api/reviews';
-
-    fetch(url, {
+  
+    // API endpoints
+    const reviewUrl = 'http://localhost:5000/api/reviews';
+    const aiReviewUrl = 'http://localhost:5000/api/reviews/ai';
+  
+    // Fetch request to submit the review
+    const submitReview = fetch(reviewUrl, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      // The server expects fields named "username", "email", and "password"
-      // If your server expects "name" instead of "username", adjust accordingly
-      body: JSON.stringify({
-        sessionDuration: 45,
-      // This might store the "study session" rating as selectedEmoji
-      rating: selectedEmoji,
-      // This might store "AI satisfaction" as selectedRating
-      scheduleSatisfaction: selectedRating,
-      feedback: feedback,
-      user_id: 1 // or wherever you get the logged-in user ID
-      })
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        // Registration successful
-        console.log('Review successful:', data);
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(reviewData),
+    }).then(response => {
+      console.log("Review API Response:", response); // Debugging
+      if (!response.ok) throw new Error('Failed to submit review');
+      return response.json();
+    });
+  
+    // Fetch request to process AI-related review analysis
+    const processAIReview = fetch(aiReviewUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(reviewData),
+    }).then(response => {
+      console.log("AI Review API Response:", response); // Debugging
+      if (!response.ok) throw new Error('Failed to process AI review');
+      return response.json();
+    });
+  
+    // Execute both fetch requests in parallel
+    Promise.all([submitReview, processAIReview])
+      .then(([reviewResponse, aiResponse]) => {
+        console.log('Review submitted:', reviewResponse);
+        console.log('AI review processed:', aiResponse);
         alert('Review submitted successfully!');
-        navigate("/profile")
+        navigate("/profile");
       })
       .catch(error => {
-        // Handle errors
-        console.error('Review error:', error);
-        alert('Review submission failed. Please try again.');
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
       });
   };
-
+  
   return (
     <div className="body">
       <div className="logo">
