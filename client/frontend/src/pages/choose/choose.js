@@ -6,10 +6,10 @@ const Choose = () => {
   const navigate = useNavigate();
 
   return (
-    
+    <div className="page-container">
       <div className="logo">
         <img src="/logo.png" alt="App Logo" />
-      
+      </div>
 
       <div className="container">
         <h1 className="title">
@@ -24,16 +24,16 @@ const Choose = () => {
         </p>
 
         <p className="slogan">Deeply Seeking Knowledge, One Step at a Time</p>
-
-        <div className="button-container">
-          <button className="login-button" onClick={() => navigate("/login")} id="login-btn">
-            Log in
-          </button>
-          
-          <button className="signup-button" onClick={() => navigate("/register")} id="signup-btn">
-            Sign up
-          </button>
-        </div>
+      </div>
+      
+      <div className="button-container">
+        <button className="login-button" onClick={() => navigate("/login")} id="login-btn">
+          Log in
+        </button>
+        
+        <button className="signup-button" onClick={() => navigate("/register")} id="signup-btn">
+          Sign up
+        </button>
       </div>
     </div>
   );

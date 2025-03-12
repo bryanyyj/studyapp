@@ -14,65 +14,78 @@ body {
     height: 100vh;
 }
 
-.container {
-    width: 95%;
-    max-width: 1000px; /* Increased max-width to make the layout wider */
+.profile-container {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    width: 90%;
+    max-width: 400px;
 }
 
-/* Logo Container */
-.logo-container {
-    text-align: center;
-    margin-bottom: 5px; /* Reduced space */
-  }
-  .logo-container img {
-    width: 400px;
-  }  
-
-.calendar-section, .stats-section {
-    width: 100%; /* Ensures they take up full container width */
-    background: #ffffff;
-    padding: 40px; /* Slightly increased padding */
+.card {
+    background: #fff;
+    padding: 20px;
     border-radius: 10px;
-    text-align: center;
-    position: relative;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+/* Calendar card adjustments */
+.card.calendar-card {
+    width: calc(100% + 20px);
+    padding: 20px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Month navigation container */
+.month-nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    position: relative;
+    margin-bottom: 15px; /* Spacing between buttons and calendar */
+}
+
+/* Fix month navigation buttons */
 .month-nav {
-    position: absolute;
-    top: 20px;
-    background: none;
-    border: none;
-    color: #555;
-    font-size: 18px;
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 5px 8px;
+    border-radius: 5px;
+    font-size: 14px;
     cursor: pointer;
-}
-
-.month-nav.left {
-    left: 10px;
-}
-
-.month-nav.right {
-    right: 10px;
-}
-
-.month-display {
-    font-size: 22px;
-    font-weight: bold;
     color: #333;
+    transition: background 0.2s;
 }
 
+.month-nav:hover {
+    background: #f0f0f0;
+}
+
+/* Ensure the month name is centered between buttons */
+.month-display {
+    font-size: 18px;
+    font-weight: bold;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+}
+
+/* Calendar styles */
 .calendar {
-    margin-top: 20px;
+    width: 100%;
 }
 
-.day-names, .days-grid {
+.day-names,
+.days-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 5px;
+    font-weight: bold;
 }
 
 .day-names span {
@@ -82,7 +95,7 @@ body {
 }
 
 .days-grid div {
-    padding: 12px;
+    padding: 10px;
     text-align: center;
     border-radius: 5px;
     background: #f9f3f4;
@@ -90,25 +103,83 @@ body {
     color: #333;
 }
 
-.days-grid div.active {
-    background: #1a5a7d; /* Darker blue for active day */
+/* Ensure the selected day number is always visible */
+.day .day-number {
+    color: inherit;
+    font-weight: bold;
+}
+
+.days-grid div.active .day-number {
+    color: white; /* Ensure number is visible when highlighted */
+}
+
+/* Highlighted days should also show the number clearly */
+.days-grid div.highlight .day-number {
     color: white;
+}
+
+/* Translucent highlight for active day */
+.days-grid div.active {
+    background: rgba(26, 90, 125, 0.5);
+    color: #000;
     font-weight: bold;
 }
 
 .days-grid div.highlight {
-    background: #56addc; /* Lighter blue for highlights */
+    background: rgba(86, 173, 220, 0.4);
+    color: #000;
 }
 
-.stats-section {
-    background: #ffffff;
-    padding: 25px; /* Increased padding */
-    border-radius: 10px;
+/* Increase the width of the stats card slightly */
+.stats-card {
+    width: calc(100% + 20px);
+    max-width: 420px;
+}
+
+.stats-card .stats-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.selected-date {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #333;
     text-align: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.tabs {
+.stat-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 5px 0;
+    width: 100%;
+}
+
+.stat-box h2,
+.stat-box h4 {
+    margin: 0;
+}
+
+.stat-box small {
+    width: 45%;
+}
+
+.stat-box span {
+    color: #777;
+    font-size: 14px;
+}
+
+.stat-box h2,
+.stat-box h4 {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.stats-card .tabs {
     display: flex;
     justify-content: space-around;
     margin-bottom: 10px;
@@ -121,7 +192,7 @@ body {
 }
 
 .tab.active {
-    border-bottom: 2px solid #1a5a7d; /* Darker blue for active tab */
+    border-bottom: 2px solid #1a5a7d;
     color: #1a5a7d;
 }
 
@@ -135,8 +206,8 @@ body {
 }
 
 .stat-box.small {
-    width: 100%; /* Make smaller stats full width */
-    display: block; /* Stack them instead of side by side */
+    display: inline-block;
+    width: 48%;
 }
 
 .stat-box h2 {
@@ -151,6 +222,7 @@ body {
     color: #777;
 }
 
-.start-time, .end-time {
+.start-time,
+.end-time {
     color: #4a90e2;
 }

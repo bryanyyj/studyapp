@@ -88,7 +88,7 @@ const Survey = () => {
   return (
     <div>
       <div className="logo">
-        <img src="https://i.imgur.com/FLXaWS.png" alt="Logo" />
+        <img src="/logo.png" alt="Logo" />
       </div>
 
       <div className="container">

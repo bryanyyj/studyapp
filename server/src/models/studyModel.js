@@ -49,8 +49,8 @@ module.exports.deleteStudySessionById = (data, callback) => {
 // MODEL FUNCTION TO SELECT STUDY SESSIONS WITH START AND END TIME
 // ##############################################################
 module.exports.selectStudySessionBySessionId = (data, callback) => {
-    const query = "SELECT start_time, end_time FROM study_sessions WHERE id = ?";
-    pool.query(query, [data.session_id], callback);
+    const query = "SELECT * FROM study_sessions WHERE id = ?";
+    pool.query(query, [data.session_id], callback); 
 };
 
 // ##############################################################
@@ -58,10 +58,11 @@ module.exports.selectStudySessionBySessionId = (data, callback) => {
 // ##############################################################
 module.exports.insertTotalTime = (data, callback) => {
     const SQLSTATEMENT = `
-        INSERT INTO Study_Sessions (total_time)
-        VALUES (?)
+        UPDATE Study_Sessions 
+        SET total_time = ?
+        WHERE id = ?;
     `;
-    const VALUES = [data.time];
+    const VALUES = [data.time, data.session_id];
 
     pool.query(SQLSTATEMENT, VALUES, callback);
 };

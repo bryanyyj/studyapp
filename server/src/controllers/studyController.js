@@ -71,32 +71,36 @@ module.exports.calculateTotalStudyTime = (req, res, next) => {
         session_id: req.body.session_id
     };
 
-    const callback = (error, results, fields) => {
+    const callback = (error, results) => {
         if (error) {
             console.error("Error calculateTotalStudyTime:", error);
-            res.status(500).json(error);
-        } else {
-            if (results.length == 0) {
-                return res.status(404).json({ message: "No study sessions found" });
-            }
+            return res.status(500).json(error);
+        }
 
-            // Calculate total time
+        if (results.length === 0) {
+            return res.status(404).json({ message: "No study sessions found" });
+        }
 
-            let totalTimeInMinutes = 0;
-                const startTime = new Date(results.start_time);  // Assuming start_time is in 'YYYY-MM-DD HH:mm:ss' format
-                const endTime = new Date(results.end_time);      // Assuming end_time is in 'YYYY-MM-DD HH:mm:ss' format
-                
-                const durationInMinutes = (endTime - startTime) / 60000;  // Convert milliseconds to minutes
-                totalTimeInMinutes += durationInMinutes;
-            
-            res.locals.totalTime = totalTimeInMinutes
-            
-        } next()
+        // Extract the first row correctly
+        const session = results[0];  // ✅ Fix: Get the first row from results
+
+        if (!session.start_time || !session.end_time) {
+            return res.status(400).json({ message: "Session start_time or end_time is missing" });
+        }
+
+        // Convert to Date objects
+        const startTime = new Date(session.start_time);
+        const endTime = new Date(session.end_time);
+
+        // Calculate duration in minutes
+        const totalTimeInMinutes = (endTime - startTime) / 60000;  // ✅ Convert ms to minutes
+
+        res.locals.totalTime = totalTimeInMinutes;  // ✅ Store in middleware for next function
+        next();
     };
 
     model.selectStudySessionBySessionId(data, callback);
 };
-
 
 // ##############################################################
 // DEFINE CONTROLLER FUNCTION TO DELETE A STUDY SESSION BY ID
@@ -125,9 +129,10 @@ module.exports.deleteStudySessionById = (req, res, next) => {
 // ##############################################################
 module.exports.storeEndTIme = (req, res, next) => {
     const data = {
-        time: res.locals.totalTime
+        time: res.locals.totalTime,
+        session_id: req.body.session_id
     };
-
+    console.log(res.locals.totalTime)
     const callback = (error, results) => {
         if (error) {
             console.error("Error startStudySession:", error);
@@ -141,3 +146,31 @@ module.exports.storeEndTIme = (req, res, next) => {
 
     model.insertTotalTime(data, callback);
 };
+
+// ##############################################################
+// DEFINE CONTROLLER FUNCTION GETTING STUDY SESSION BY SESSSION ID
+// ##############################################################
+module.exports.getSessionById = (req, res, next) =>
+    {
+        const data = {
+        session_id: req.body.session_id
+        }
+    
+    const callback = (error, results, fields) => {
+        if (error) {
+            console.error("Error getUserByUserId:", error);
+            res.status(500).json(error);
+        } 
+            if(results.length == 0) 
+            {
+                res.status(404).json({
+                    message: "User not found"
+                });
+            }
+        else{
+            res.status(200).json(results[0])
+        }
+
+    }
+        model.selectStudySessionBySessionId(data, callback);
+    }

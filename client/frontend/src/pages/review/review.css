@@ -8,16 +8,16 @@
     font-family: 'Nunito', sans-serif;
 }
 
+/* Gradient Background Animation */
+@keyframes gradientShiftBackground {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
 /* Body Styling */
-.body {
-    background: linear-gradient(135deg, 
-        #f3e7e9, /* Soft pink */
-        #e3eeff, /* Light blue */
-        #fde2e4, /* Peachy pink */
-        #d6e5fa, /* Sky blue */
-        #fff3e0, /* Soft cream */
-        #f3e7e9  /* Loop back to soft pink */
-    );
+body {
+    background: linear-gradient(135deg, #f3e7e9, #e3eeff, #fde2e4, #d6e5fa, #fff3e0, #f3e7e9);
     background-size: 800% 800%;
     animation: gradientShiftBackground 40s infinite ease-in-out;
     display: flex;
@@ -25,187 +25,201 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
+    margin: 0;
     padding: 20px;
+    overflow: hidden; /* Prevent unnecessary scrolling */
+}
+
+/* Logo Styling */
+.logo {
+    margin-bottom: 30px; /* Space below the logo */
     text-align: center;
 }
 
-/* Logo Styling - Positioned Outside the Form */
-.logo {
-    width: 90%;
-    max-width: 500px; /* Larger Size */
-    margin-bottom: 40px; /* Space between logo and form */
-}
 .logo img {
-    width: 100%;
+    width: 180px; /* Adjusted size for better proportions */
     height: auto;
-    object-fit: contain;
 }
 
-/* Form Container (Now Separated from Logo) */
+/* Container Styling */
 .container {
-    background-color: rgba(250, 250, 250, 0.9);
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    padding: 40px;
     width: 100%;
-    max-width: 600px; /* Wider Form */
+    max-width: 400px; /* Adjusted for better readability */
+    padding: 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; /* Align content to the top */
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
     position: relative;
-    z-index: 1;
-    overflow: hidden;
+    overflow-y: auto; /* Enable scrolling if content overflows */
+    max-height: 75vh; /* Limit container height to prevent excessive stretching */
 }
 
-/* Form Title */
+/* Title Styling */
 h1 {
-    font-size: 36px; /* Increased size for the title */
-    color: #4d5b6c;
-    margin-bottom: 10px; /* Increased spacing below title */
-    font-weight: 600;
-}
-
-/* Larger Timer Styling */
-.timer {
-    font-size: 36px; /* Significantly bigger font size for timer */
-    color: #4d5b6c;
-    margin: 20px 0;
+    font-size: 24px;
     font-weight: bold;
+    color: #000;
+    margin-bottom: 10px;
 }
 
-/* Larger Text for 'How was your study session?' */
-.container p {
-    font-size: 24px; /* Bigger size for the text */
-    color: #4d5b6c;
-    margin-bottom: 20px; /* Add space between the text and the emoji section */
+/* Timer Styling */
+.timer {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 10px;
 }
 
-/* Emoji Rating Section */
+/* Emoji Rating */
 .emoji-rating {
     display: flex;
     justify-content: center;
-    gap: 30px;
-    font-size: 40px; /* Increase emoji size */
-    margin-bottom: 20px;
-    cursor: pointer;
+    gap: 10px;
+    margin-bottom: 10px;
 }
 
-/* Emoji Hover and Selection Highlight */
 .emoji {
-    transition: transform 0.2s ease, filter 0.2s ease, background-color 0.2s ease;
-    border: 3px solid transparent;
-    border-radius: 8px;
-    padding: 10px;
-    position: relative;
-}
-
-.emoji:hover {
-    transform: scale(1.3);
-    background-color: rgba(0, 123, 255, 0.2);
+    font-size: 28px;
+    cursor: pointer;
+    transition: transform 0.3s ease, color 0.3s ease, border 0.3s ease;
+    color: #aaa; /* Default color for unselected emojis */
+    padding: 6px; /* Reduced padding for a slimmer look */
+    border-radius: 50%; /* Keep it circular */
+    border: 2px solid transparent; /* Transparent border by default */
 }
 
 .emoji.selected {
-    filter: brightness(1.3);
-    background-color: rgba(0, 123, 255, 0.6);
-    color: white;
+    transform: scale(1.2); /* Slightly smaller enlargement */
+    color: #318ba4; /* Keep the text color consistent with the theme */
+    border: 2px solid #318ba4; /* Add a thin border for emphasis */
+    background-color: rgba(49, 139, 164, 0.1); /* Semi-transparent background for subtlety */
+    box-shadow: none; /* Remove shadow for a cleaner look */
 }
 
-/* Feedback Text Area */
-textarea {
-    width: 100%;
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid #e0e0e0;
-    font-size: 16px;
-    color: #333;
-    background-color: #f8f8f8;
-    resize: none;
-    transition: border-color 0.3s ease;
-    margin-top: 10px;
-    height: 100px;
-}
-textarea:focus {
-    border-color: #3b97b9;
-    outline: none;
-    background-color: #fff;
-}
-
-/* Satisfaction Rating Section */
+/* AI Satisfaction Section */
+/* AI Satisfaction Section */
 .rating-container {
-    text-align: center;
-    margin-top: 20px;
+    margin-bottom: 10px;
 }
 
 .satisfaction-buttons {
     display: flex;
-    justify-content: space-between; /* Distribute items evenly */
-    gap: 10px; /* Add a small gap between items */
-    width: 100%;
-    max-width: 400px;
-    margin: 0 auto;
+    justify-content: center;
+    align-items: flex-end; /* Align buttons at the bottom */
+    gap: 10px; /* Consistent spacing between buttons */
 }
 
 .rating-item {
     display: flex;
     flex-direction: column;
-    align-items: center; /* Center items horizontally */
-    justify-content: flex-end; /* Align buttons at the bottom */
-    flex: 1; /* Allow each item to take up equal space */
-    height: 80px; /* Fixed height for all items */
+    align-items: center;
+    justify-content: flex-end; /* Align content to the bottom */
+    height: 60px; /* Fixed height for all rating items */
 }
 
 .rating-label-above {
-    font-size: 14px;
-    font-weight: bold;
-    color: #4d5b6c;
-    margin-bottom: 5px; /* Space between label and button */
-    white-space: nowrap; /* Prevent wrapping of label text */
+    font-size: 12px;
+    color: #555;
+    line-height: 1; /* Prevent font-related misalignment */
+    margin-bottom: 0; /* Remove margin to avoid pushing buttons down */
 }
 
-.rating-label-above.empty-label {
-    visibility: hidden; /* Hide the placeholder label */
+.empty-label {
+    visibility: hidden; /* Hide empty labels to maintain alignment */
+    height: 12px; /* Match the height of visible labels */
 }
 
 .rating-btn {
-    padding: 10px;
+    width: 40px;
+    height: 40px;
     font-size: 16px;
-    border: none;
-    background-color: #e0e0e0;
-    border-radius: 5px;
+    font-weight: bold;
+    color: #000;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 1px solid #ccc;
+    border-radius: 50%;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    width: 40px; /* Fixed width for buttons */
-    height: 40px; /* Fixed height for buttons */
+    transition: all 0.3s ease;
     display: flex;
     justify-content: center;
-    align-items: center;
-}
-
-.rating-btn:hover {
-    background-color: #3b97b9;
-    color: white;
-    transform: scale(1.1);
+    align-items: center; /* Center text inside the button */
+    position: relative; /* Allows fine-tuning with `top` */
+    top: 0; /* Fine-tune alignment if needed */
 }
 
 .rating-btn.selected {
-    background-color: #3b97b9;
+    background-color: #318ba4;
     color: white;
+    border-color: #318ba4;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Feedback Textarea */
+.feedback-box {
+    width: 100%;
+    min-height: 80px;
+    padding: 10px;
+    font-size: 14px;
+    color: #222;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    resize: none; /* Disable manual resizing */
 }
 
 /* Submit Button */
-button.submit-btn {
-    background-color: #3b97b9;
-    color: white;
-    padding: 14px;
+.submit-btn {
     width: 100%;
-    border-radius: 8px;
-    border: none;
+    padding: 12px;
     font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    margin-top: 15px;
-}
-button.submit-btn:hover {
+    font-weight: bold;
+    color: white;
     background-color: #318ba4;
-    transform: translateY(-2px);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
-button.submit-btn:active {
-    transform: translateY(2px);
+
+.submit-btn:hover {
+    background-color: #2a7c92;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* Media Query for Smaller Screens */
+@media (max-width: 400px) {
+    .logo img {
+        width: 150px; /* Smaller logo for mobile */
+    }
+
+    h1 {
+        font-size: 20px; /* Smaller title */
+    }
+
+    .timer {
+        font-size: 16px; /* Smaller timer text */
+    }
+
+    .emoji {
+        font-size: 24px; /* Smaller emojis */
+    }
+
+    .rating-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 14px;
+    }
+
+    .feedback-box {
+        font-size: 12px;
+    }
+
+    .submit-btn {
+        font-size: 14px;
+        padding: 10px;
+    }
 }

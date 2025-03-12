@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "./main.css";
-import 'font-awesome/css/font-awesome.min.css';  // Import Font Awesome
-import { useNavigate } from 'react-router-dom'; // For redirection
-
+import 'font-awesome/css/font-awesome.min.css';
+import { useNavigate } from 'react-router-dom';
 
 const Main = () => {
-   const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const [date, setDate] = useState("");
   const [studySeconds, setStudySeconds] = useState(0);
@@ -77,22 +76,26 @@ const Main = () => {
   };
 
   return (
-    <div className="container">
+    <>
       <div className="logo-container">
-        <img src="https://i.imgur.com/FLXaWSm.png" alt="App Logo" />
+        <img src="/logo.png" alt="App Logo" />
       </div>
       <div className="timer-section">
         <p className="date">{date}</p>
         <div className="timer-wrapper">
-          <div className="timer-display">{`${Math.floor(studySeconds / 60)}:${(studySeconds % 60).toString().padStart(2, "0")}`}</div>
+          <div className="timer-display">
+            {`${Math.floor(studySeconds / 60)}:${(studySeconds % 60).toString().padStart(2, "0")}`}
+          </div>
         </div>
         <div className="break-timer-wrapper">
-          <div className="break-timer">{`${Math.floor(breakTime / 60)}:${(breakTime % 60).toString().padStart(2, "0")}`}</div>
+          <div className="break-timer">
+            {`${Math.floor(breakTime / 60)}:${(breakTime % 60).toString().padStart(2, "0")}`}
+          </div>
         </div>
         <div className="controls">
           <i className="fa fa-play" onClick={startSession}></i>
           <i className="fa fa-pause" onClick={pauseSession}></i>
-          <i className="fa-solid fa-rotate-left" onClick={resetSession}></i> {/* Updated Reset Icon */}
+          <i className="fa-solid fa-rotate-left" onClick={resetSession}></i>
         </div>
       </div>
       <div className="stats-section">
@@ -109,13 +112,14 @@ const Main = () => {
           <span>{((studySeconds / goalTimeSeconds) * 100).toFixed(2)}%</span>
         </div>
       </div>
+      {/* Navbar at the bottom */}
       <div className="nav-bar">
-        <span className="nav-item">🏠 Home</span>
+        <span className="nav-item" onClick={() => navigate("/main")}>🏠 Home</span>
         <span className="nav-item">🤖 Chatbot</span>
-        <span className="nav-item">📅 Timetable</span>
+        <span className="nav-item" onClick={() => navigate("/profile")}>📅 Timetable</span>
         <span className="nav-item">⋮ More</span>
       </div>
-    </div>
+    </>
   );
 };
 

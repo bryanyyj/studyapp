@@ -14,8 +14,10 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   height: 100vh;
   margin: 0;
+  overflow: hidden;
 }
 
 /* Container */
@@ -26,17 +28,18 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  height: 100vh;
+  justify-content: center;
+  height: auto;
+  min-height: 90vh;
 }
 
-/* Logo Container */
 .logo-container {
   text-align: center;
-  margin-bottom: 5px; /* Reduced space */
+  top: 10px;
 }
+
 .logo-container img {
-  width: 400px;
+  width: 300px;
 }
 
 /* Timer Section */
@@ -47,22 +50,16 @@ body {
   color: white;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
   width: 100%;
-  max-width: 400px;
+  max-width: 1000px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  margin-bottom: 20px; /* Reduced space */
+  margin-bottom: 20px;
 }
 
-/* Date Text */
-.date {
-  font-size: 18px;
-  margin-bottom: 15px; /* Reduced space */
-}
-
-/* Study Timer Display (Circle) */
+/* Timer Display (Circle) */
 .timer-display {
   font-size: 3rem;
   font-weight: bold;
@@ -85,7 +82,7 @@ body {
 .break-timer-wrapper {
   display: flex;
   justify-content: center;
-  margin-bottom: 15px; /* Reduced space */
+  margin-bottom: 15px;
 }
 .break-timer {
   font-size: 1.5rem;
@@ -103,7 +100,7 @@ body {
   display: flex;
   gap: 15px;
   justify-content: center;
-  margin-bottom: 5px; /* Reduced space */
+  margin-bottom: 5px;
 }
 .controls i {
   font-size: 24px;
@@ -118,22 +115,30 @@ body {
 }
 
 /* Stats Section */
+/* Stats Section */
 .stats-section {
   display: flex;
   justify-content: space-between;
   width: 100%;
-  margin-top: 5px; /* Reduced space */
+  background-color: white; /* Ensure the stats section has a white background */
+  padding: 20px; /* Add padding for spacing */
+  border-radius: 10px; /* Optional: Add rounded corners for aesthetics */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Add subtle shadow */
 }
+
+/* Individual Stat Boxes */
 .stat-box {
-  background: white;
   padding: 25px;
   text-align: center;
   border-radius: 10px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   flex: 1;
   margin: 0 15px;
-  max-width: 1000px; /* Increased width for boxes */
+  max-width: 1000px;
+  background-color: white; /* Ensure each stat box has a white background */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+  border: 1px solid #ddd; /* Optional: Light border for better separation */
 }
+
 .stat-box p {
   font-size: 16px;
   color: #666;
@@ -144,15 +149,21 @@ body {
   color: #333;
 }
 
-/* Gradient Effect for "Study Math" */
-.highlight {
+/* Progress Bar for Questionnaire */
+.progress-bar {
+  width: 100%;
+  max-width: 500px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 5px;
+  overflow: hidden;
+  margin-top: 10px;
+}
+.progress-bar div {
+  height: 100%;
   background: linear-gradient(45deg, #318ba4, #ff6b6b);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-  font-weight: bold;
-  font-size: 1.8rem;
+  width: 0%;
+  transition: width 0.3s ease-in-out;
 }
 
 /* Navigation Bar */
@@ -162,7 +173,7 @@ body {
   align-items: center;
   width: 100%;
   background: #a777e3;
-  padding: 10px 0;
+  padding: 5px 0;
   position: fixed;
   bottom: 0;
   left: 0;
@@ -170,9 +181,9 @@ body {
   box-shadow: 0px -4px 8px rgba(0, 0, 0, 0.1);
 }
 .nav-item {
-  font-size: 18px;
+  font-size: 16px;
   color: white;
-  padding: 10px 20px;
+  padding: 8px 15px;
   cursor: pointer;
   transition: transform 0.2s ease, background 0.3s ease;
   border-radius: 10px;

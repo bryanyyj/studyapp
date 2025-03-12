@@ -108,6 +108,15 @@ db.serialize(() => {
     ON UPDATE CASCADE
 );
 
+
+CREATE TABLE Todos (
+    todo_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    subject TEXT NOT NULL,
+    task TEXT NOT NULL,
+    deadline DATETIME NOT NULL
+);
+
+
   `;
 
   db.exec(sql, (err) => {

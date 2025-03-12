@@ -51,62 +51,74 @@ const Profile = () => {
     };
 
     return (
-        <div className="container">
+        <div className="profile-container">
             <div className="logo-container">
-                <img src="https://i.imgur.com/FLXaWSm.png" alt="App Logo" />
+                <img src="/logo.png" alt="App Logo" />
             </div>
-            <div className="calendar-section">
-                <button className="month-nav left" onClick={() => updateMonth(-1)}>&lt;</button>
-                <span className="month-display">{monthNames[currentMonth]}</span>
-                <button className="month-nav right" onClick={() => updateMonth(1)}>&gt;</button>
 
-                <div className="calendar">
-                    <div className="day-names">
-                        <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+            {/* Calendar Card */}
+            <div className="card calendar-card">
+                <div className="calendar-section">
+                    <div className="month-nav-container">
+                        <button className="month-nav left" onClick={() => updateMonth(-1)}>&lt;</button>
+                        <span className="month-display">{monthNames[currentMonth]}</span>
+                        <button className="month-nav right" onClick={() => updateMonth(1)}>&gt;</button>
                     </div>
-                    <div className="days-grid">
-                        {generateCalendar().map((day) => (
-                            <div
-                                key={day}
-                                className={`day ${day === selectedDay ? "active" : ""} ${getHighlightedDays().includes(day) ? "highlight" : ""}`}
-                                onClick={() => setSelectedDay(day)}
+
+                    <div className="calendar">
+                        <div className="day-names">
+                            <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                        </div>
+                        <div className="days-grid">
+                            {generateCalendar().map((day) => (
+                                <div
+                                    key={day}
+                                    className={`day ${day === selectedDay ? "active" : ""} ${getHighlightedDays().includes(day) ? "highlight" : ""}`}
+                                    onClick={() => setSelectedDay(day)}
+                                >
+                                    <span className="day-number">{day}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Stats Card */}
+            <div className="card stats-card">
+                <div className="stats-section">
+                    <div className="tabs">
+                        {["day", "week", "month"].map((view) => (
+                            <span
+                                key={view}
+                                className={`tab ${activeView === view ? "active" : ""}`}
+                                onClick={() => {
+                                    setActiveView(view);
+                                    setSelectedDay(1); // Ensure correct date update
+                                }}
                             >
-                                {day}
-                            </div>
+                                {view.charAt(0).toUpperCase() + view.slice(1)}
+                            </span>
                         ))}
                     </div>
-                </div>
-            </div>
-
-            <div className="stats-section">
-                <div className="tabs">
-                    {["day", "week", "month"].map((view) => (
-                        <span
-                            key={view}
-                            className={`tab ${activeView === view ? "active" : ""}`}
-                            onClick={() => setActiveView(view)}
-                        >
-                            {view.charAt(0).toUpperCase() + view.slice(1)}
-                        </span>
-                    ))}
-                </div>
-                <div className="stats">
-                    <h3 className="selected-date">{formatDate(selectedDay, currentMonth, currentYear)}</h3>
-                    <div className="stat-box">
-                        <span>Total</span>
-                        <h2 className="total-time">00:00:00</h2>
-                    </div>
-                    <div className="stat-box">
-                        <span>Max Focus</span>
-                        <h2 className="max-focus">00:00:00</h2>
-                    </div>
-                    <div className="stat-box small">
-                        <span>Started</span>
-                        <h4 className="start-time">--:--:--</h4>
-                    </div>
-                    <div className="stat-box small">
-                        <span>Finished</span>
-                        <h4 className="end-time">--:--:--</h4>
+                    <div className="stats">
+                        <h3 className="selected-date">{formatDate(selectedDay, currentMonth, currentYear)}</h3>
+                        <div className="stat-box">
+                            <span>Total</span>
+                            <h2 className="total-time">00:00:00</h2>
+                        </div>
+                        <div className="stat-box">
+                            <span>Max Focus</span>
+                            <h2 className="max-focus">00:00:00</h2>
+                        </div>
+                        <div className="stat-box small">
+                            <span>Started</span>
+                            <h4 className="start-time">--:--:--</h4>
+                        </div>
+                        <div className="stat-box small">
+                            <span>Finished</span>
+                            <h4 className="end-time">--:--:--</h4>
+                        </div>
                     </div>
                 </div>
             </div>
