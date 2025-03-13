@@ -54,3 +54,12 @@ module.exports.insertBreak = (data, callback) => {
     const VALUES = [data.notes,data.session_id];
     pool.query(SQLSTATEMENT, VALUES, callback);
 };
+module.exports.getSessionByDate = (data, callback) => {
+    const SQLSTATEMENT = `
+        SELECT * FROM Study_Sessions 
+        WHERE user_id = ? AND DATE(start_time) = ?;
+    `;
+    const VALUES = [data.user_id, data.sessionDate];
+
+    pool.query(SQLSTATEMENT, VALUES, callback);
+};

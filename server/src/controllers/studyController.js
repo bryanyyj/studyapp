@@ -190,3 +190,25 @@ module.exports.storeBreakTime = (req, res, next) => {
 
     model.insertBreak(data, callback);
 };
+module.exports.getSessionByDate = (req, res, next) => {
+    const data = {
+        // route param is :id
+        sessionDate: req.params.date,
+        user_id: req.query.user_id
+    };
+
+    const callback = (error, results) => {
+        console.log(data)
+        console.log(results)
+        if (error) {
+            console.error("Error getSessionById:", error);
+            return res.status(500).json(error);
+        }
+        if (results.length === 0) {
+            return res.status(404).json({ message: "Session not found." });
+        }
+        res.status(200).json(results);
+    };
+
+    model.getSessionByDate(data, callback);
+};

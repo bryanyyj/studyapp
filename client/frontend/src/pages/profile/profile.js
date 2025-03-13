@@ -7,8 +7,8 @@ const Profile = () => {
     const [selectedDay, setSelectedDay] = useState(1);
     const [activeView, setActiveView] = useState("day");
     const [noteView, setNoteView] = useState("day");
-
-    const [sessionData, setSessionData] = useState(null);
+    const user_id = localStorage.getItem("user_id")
+    const [sessionData, setSessionData] = useState([]); 
 
     const monthNames = [
       "January", "February", "March", "April", "May", "June",
@@ -71,7 +71,38 @@ const Profile = () => {
         setCurrentYear(newYear);
         setSelectedDay(1);
     };
-
+    //Function to call backend to insert into the notes
+    const handleDayClick = (day) => {
+        setSelectedDay(day);
+        fetchStudySession(day, currentMonth, currentYear);
+    };
+    const fetchStudySession = (day, month, year) => {
+        const formattedDate = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+        
+        fetch(`http://localhost:5000/api/study/date/${formattedDate}?user_id=${user_id}`, { method: "GET" })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Failed to fetch session data");
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Fetched session data:", data);
+                // Set sessionData to an empty array if no data is returned
+                setSessionData(data || []);
+            })
+            .catch(error => {
+                console.error("Error fetching session:", error);
+                // Set sessionData to an empty array in case of error
+                setSessionData([]);
+            });
+    };
+    
+    // Fetch session data when component loads
+    useEffect(() => {
+        fetchStudySession(selectedDay, currentMonth, currentYear);
+    }, [currentMonth, currentYear, selectedDay]);
+    
     // Function to determine if a day should be highlighted
     const shouldHighlightDay = (day) => {
         if (activeView === "day") {
@@ -102,24 +133,6 @@ const Profile = () => {
         return formatDate(selectedDay, currentMonth, currentYear);
     };
 
-    useEffect(() => {
-        fetch("http://localhost:5000/api/study/1", { method: "GET" })
-          .then(response => {
-              if (!response.ok) {
-                  throw new Error("Failed to fetch session data");
-              }
-              return response.json();
-          })
-          .then(data => {
-              console.log("Fetched session data:", data);
-              setSessionData(data);
-          })
-          .catch(error => {
-              console.error("Error fetching session:", error);
-              setSessionData(null);
-          });
-    }, [currentMonth, currentYear, selectedDay]);
-
     return (
         <>
             <div className="logo-container">
@@ -127,20 +140,38 @@ const Profile = () => {
             </div>
 
             <div className="card note-card">
-                    <h3>Study Session Notes</h3>
-                    <div className="tabs">
-                        {["day", "week", "month"].map((view) => (
-                            <span
-                                key={view}
-                                className={`tab ${noteView === view ? "active" : ""}`}
-                                onClick={() => setNoteView(view)}
-                            >
-                                {view.charAt(0).toUpperCase() + view.slice(1)}
-                            </span>
-                        ))}
+    <h3>Study Session Notes</h3>
+    <div className="tabs">
+        {["day", "week", "month"].map((view) => (
+            <span
+                key={view}
+                className={`tab ${noteView === view ? "active" : ""}`}
+                onClick={() => setNoteView(view)}
+            >
+                {view.charAt(0).toUpperCase() + view.slice(1)}
+            </span>
+        ))}
+    </div>
+    <p>Notes for {noteView.charAt(0).toUpperCase() + noteView.slice(1)} View</p>
+
+    {/* Displaying Study Sessions dynamically */}
+    <div className="study-sessions-container">
+        {sessionData.length > 0 ? (
+            sessionData.map((session, index) => (
+                <div className="session-card" key={index}>
+                    <div className="session-start-time">
+                        <strong>Start Time:</strong> {session.start_time || "N/A"}
                     </div>
-                    <p>Notes for {noteView.charAt(0).toUpperCase() + noteView.slice(1)} View</p>
-            </div>
+                    <div className="session-notes">
+                        <strong>Notes:</strong> {session.notes || "No notes provided"}
+                    </div>
+                </div>
+            ))
+        ) : (
+            <p>No study sessions available for this date.</p>
+        )}
+    </div>
+</div>
 
             <div className="profile-container">
                 <div className="card">
@@ -161,7 +192,7 @@ const Profile = () => {
                                     <div
                                         key={day}
                                         className={`day ${shouldHighlightDay(day) ? "active" : ""}`}
-                                        onClick={() => setSelectedDay(day)}
+                                        onClick={() => handleDayClick(day)}
                                     >
                                         <span className="day-number">{day}</span>
                                     </div>
