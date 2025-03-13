@@ -68,6 +68,22 @@ const Profile = () => {
                 <img src="/logo.png" alt="App Logo" />
             </div>
 
+            <div className="card note-card">
+                    <h3>Study Session Notes</h3>
+                    <div className="tabs">
+                        {["day", "week", "month"].map((view) => (
+                            <span
+                                key={view}
+                                className={`tab ${noteView === view ? "active" : ""}`}
+                                onClick={() => setNoteView(view)}
+                            >
+                                {view.charAt(0).toUpperCase() + view.slice(1)}
+                            </span>
+                        ))}
+                    </div>
+                    <p>Notes for {noteView.charAt(0).toUpperCase() + noteView.slice(1)} View</p>
+            </div>
+
             <div className="profile-container">
                 <div className="card">
                     <div className="calendar-section">
@@ -124,22 +140,6 @@ const Profile = () => {
                             <h4 className="end-time">{sessionData?.end_time || "--:--:--"}</h4>
                         </div>
                     </div>
-                </div>
-                
-                <div className="card note-card">
-                    <h3>Study Session Notes</h3>
-                    <div className="tabs">
-                        {["day", "week", "month"].map((view) => (
-                            <span
-                                key={view}
-                                className={`tab ${noteView === view ? "active" : ""}`}
-                                onClick={() => setNoteView(view)}
-                            >
-                                {view.charAt(0).toUpperCase() + view.slice(1)}
-                            </span>
-                        ))}
-                    </div>
-                    <p>Notes for {noteView.charAt(0).toUpperCase() + noteView.slice(1)} View</p>
                 </div>
             </div>
         </>
