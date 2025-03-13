@@ -25,30 +25,28 @@ class_centers = np.array([20, 44, 70, 110], dtype=np.float32)
 def predict():
     """
     Expects JSON with keys:
-      - "sessionDuration" (float, in minutes)
-      - "breakTime" (float, in minutes)
+      - "sessionDuration" (float, in hours)
+      - "breakTime" (float, in hours)
       - "scheduleSatisfaction" (float)
-    Converts minutes to hours (if training was done in hours) and returns:
+    Assumes both sessionDuration and breakTime are already in hours,
+    scales features, and returns:
       - "prediction_time": continuous predicted study time in minutes (e.g. "44 mins")
       - "prediction_break": static string "5 mins intervals"
       - "probabilities": raw softmax probabilities from the model
     """
     try:
         data = request.get_json()
-        session_duration = float(data['sessionDuration'])
-        break_time = float(data['breakTime'])
+        # Values are assumed to be in hours already.
+        session_duration = float(data['sessionDuration'])  # hours
+        break_time = float(data['breakTime'])              # hours
         schedule_satisfaction = float(data['scheduleSatisfaction'])
     except (KeyError, ValueError):
         return jsonify({
             "error": "Invalid or missing keys. Expect sessionDuration, breakTime, scheduleSatisfaction."
         }), 400
 
-    # Convert minutes to hours (assuming training used hours)
-    study_hours = session_duration / 60.0
-    break_hours = break_time / 60.0
-
-    # Construct the input feature array: [study_hours, break_hours, schedule_satisfaction]
-    features = np.array([[study_hours, break_hours, schedule_satisfaction]], dtype=np.float32)
+    # Construct the input feature array: [session_duration, break_time, schedule_satisfaction]
+    features = np.array([[session_duration, break_time, schedule_satisfaction]], dtype=np.float32)
     features_scaled = scaler.transform(features)
     features_tensor = torch.tensor(features_scaled, dtype=torch.float32)
 
