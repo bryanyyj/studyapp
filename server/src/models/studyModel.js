@@ -24,7 +24,7 @@ module.exports.updateStudySessionEndTime = (data, callback) => {
 
 module.exports.selectStudySessionBySessionId = (data, callback) => {
     const query = "SELECT * FROM Study_Sessions WHERE id = ?";
-    pool.query(query, [data.id], callback);
+    pool.query(query, [data.session_id], callback);
 };
 
 module.exports.insertTotalTime = (data, callback) => {
