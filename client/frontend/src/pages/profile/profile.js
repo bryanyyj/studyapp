@@ -22,6 +22,34 @@ const Profile = () => {
         });
     };
 
+    // Function to get the first and last days of the week for a given date
+    const getWeekRange = (day) => {
+        const date = new Date(currentYear, currentMonth, day);
+        // Find Monday (first day of week) - adjusting for JS Date's Sunday=0 system
+        const dayOfWeek = date.getDay() === 0 ? 7 : date.getDay(); // Convert Sunday from 0 to 7
+        const mondayOffset = dayOfWeek - 1;
+        
+        const mondayDate = new Date(date);
+        mondayDate.setDate(date.getDate() - mondayOffset);
+        
+        const sundayDate = new Date(mondayDate);
+        sundayDate.setDate(mondayDate.getDate() + 6);
+        
+        // Return all days in the week as an array of day numbers
+        const weekDays = [];
+        const currentDate = new Date(mondayDate);
+        while (currentDate <= sundayDate) {
+            // Only include days that belong to the current month view
+            if (currentDate.getMonth() === currentMonth && 
+                currentDate.getFullYear() === currentYear) {
+                weekDays.push(currentDate.getDate());
+            }
+            currentDate.setDate(currentDate.getDate() + 1);
+        }
+        
+        return weekDays;
+    };
+
     const generateCalendar = () => {
         const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
         return Array.from({ length: daysInMonth }, (_, i) => i + 1);
@@ -42,6 +70,36 @@ const Profile = () => {
         setCurrentMonth(newMonth);
         setCurrentYear(newYear);
         setSelectedDay(1);
+    };
+
+    // Function to determine if a day should be highlighted
+    const shouldHighlightDay = (day) => {
+        if (activeView === "day") {
+            return day === selectedDay;
+        } else if (activeView === "week") {
+            return getWeekRange(selectedDay).includes(day);
+        } else if (activeView === "month") {
+            return true; // Highlight all days in month view
+        }
+        return false;
+    };
+
+    // Format the display date range based on the active view
+    const getDisplayDateRange = () => {
+        if (activeView === "day") {
+            return formatDate(selectedDay, currentMonth, currentYear);
+        } else if (activeView === "week") {
+            const weekDays = getWeekRange(selectedDay);
+            if (weekDays.length > 0) {
+                const firstDay = weekDays[0];
+                const lastDay = weekDays[weekDays.length - 1];
+                return `${formatDate(firstDay, currentMonth, currentYear)} - ${formatDate(lastDay, currentMonth, currentYear)}`;
+            }
+            return formatDate(selectedDay, currentMonth, currentYear);
+        } else if (activeView === "month") {
+            return `${monthNames[currentMonth]} ${currentYear}`;
+        }
+        return formatDate(selectedDay, currentMonth, currentYear);
     };
 
     useEffect(() => {
@@ -102,7 +160,7 @@ const Profile = () => {
                                 {generateCalendar().map((day) => (
                                     <div
                                         key={day}
-                                        className={`day ${day === selectedDay ? "active" : ""}`}
+                                        className={`day ${shouldHighlightDay(day) ? "active" : ""}`}
                                         onClick={() => setSelectedDay(day)}
                                     >
                                         <span className="day-number">{day}</span>
@@ -125,7 +183,7 @@ const Profile = () => {
                             </span>
                         ))}
                     </div>
-                    <h3 className="selected-date">{formatDate(selectedDay, currentMonth, currentYear)}</h3>
+                    <h3 className="selected-date">{getDisplayDateRange()}</h3>
                     <div className="stat-box"><span>Total</span>
                         <h2 className="total-time">{sessionData?.total_time || "00:00:00"}</h2>
                     </div>

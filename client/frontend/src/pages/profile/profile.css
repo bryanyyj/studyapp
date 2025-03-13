@@ -63,25 +63,15 @@ body {
     grid-column: 2 / 3; /* Keeps it in the second column */
     justify-self: center;
     margin-top: -50px; /* Moves the calendar card upwards */
-}
-
-/* Stats Card (Aligned with other two cards) */
-.stats-card {
-    background: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 400px;
-    height: 350px;
-    grid-column: 3 / 4; /* Keeps it in the third column */
-    justify-self: start;
-    margin-top: -50px; /* Moves the stats card upwards */
+    overflow: hidden; /* Prevent content from overflowing */
 }
 
 /* Calendar Section */
 .calendar-section {
     width: 100%;
     height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .month-nav-container {
@@ -109,6 +99,7 @@ body {
     cursor: pointer;
     color: #333;
     transition: background 0.2s;
+    z-index: 1;
 }
 
 .month-nav:hover {
@@ -117,6 +108,10 @@ body {
 
 .calendar {
     width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Prevent overflow */
 }
 
 .day-names, .days-grid {
@@ -126,20 +121,38 @@ body {
     font-weight: bold;
 }
 
+.day-names {
+    margin-bottom: 5px;
+}
+
 .day-names span {
     font-weight: bold;
     text-align: center;
     color: #555;
+    font-size: 0.8rem;
+}
+
+.days-grid {
+    flex: 1;
+    overflow-y: auto; /* Allow vertical scrolling if needed */
+    align-content: start;
+    height: 230px; /* Fixed height to contain all dates */
 }
 
 .days-grid div {
-    padding: 10px;
+    height: 32px; /* Fixed height for date cells */
+    padding: 5px;
     text-align: center;
     border-radius: 5px;
     background: #f9f3f4;
     cursor: pointer;
     color: #333;
     transition: background-color 0.3s, color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
 }
 
 .days-grid div:hover {
@@ -147,13 +160,26 @@ body {
     color: #000;
 }
 
-/* Highlighted Day */
+/* Highlighted Day - Adjusted to be smaller in month view */
 .days-grid div.active {
     background: none !important;
-    border: 3px solid #1a5a7d !important;
+    border: 2px solid #1a5a7d !important;
     color: #1a5a7d !important;
     font-weight: bold;
-    font-size: 20px;
+    font-size: 0.9rem;
+}
+
+/* Stats Card (Aligned with other two cards) */
+.stats-card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    height: 350px;
+    grid-column: 3 / 4; /* Keeps it in the third column */
+    justify-self: start;
+    margin-top: -50px; /* Moves the stats card upwards */
 }
 
 /* Tabs */
