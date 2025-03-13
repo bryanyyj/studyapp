@@ -45,11 +45,31 @@ body {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     width: 400px;
     height: 350px;
-    grid-column: 1 / 2; /* Keeps it in the first column */
+    grid-column: 1 / 2;
     justify-self: start;
-    margin-left: -830px; /* Adjust left shift */
-    margin-bottom: -300px; /* Moves note card downward */
-    z-index: 2; /* Ensures it's on top */
+    margin-left: -830px;
+    margin-bottom: -300px;
+    z-index: 2;
+}
+
+/* Study Session Notes Styling */
+.note-card p {
+    text-decoration: underline;
+    font-weight: bold;
+    margin-bottom: 10px; /* Adds space between title and notes */
+}
+
+.study-sessions-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Adds spacing between each note */
+}
+
+.session-card {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    border-radius: 5px;
+    border-left: 4px solid #00ffcc; /* Subtle left highlight */
 }
 
 /* Calendar Card */
@@ -60,10 +80,10 @@ body {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     width: 400px;
     height: 350px;
-    grid-column: 2 / 3; /* Keeps it in the second column */
+    grid-column: 2 / 3;
     justify-self: center;
-    margin-top: -50px; /* Moves the calendar card upwards */
-    overflow: hidden; /* Prevent content from overflowing */
+    margin-top: -50px;
+    overflow: hidden;
 }
 
 /* Calendar Section */
@@ -111,7 +131,7 @@ body {
     flex: 1;
     display: flex;
     flex-direction: column;
-    overflow: hidden; /* Prevent overflow */
+    overflow: hidden;
 }
 
 .day-names, .days-grid {
@@ -134,13 +154,13 @@ body {
 
 .days-grid {
     flex: 1;
-    overflow-y: auto; /* Allow vertical scrolling if needed */
+    overflow-y: auto;
     align-content: start;
-    height: 230px; /* Fixed height to contain all dates */
+    height: 230px;
 }
 
 .days-grid div {
-    height: 32px; /* Fixed height for date cells */
+    height: 32px;
     padding: 5px;
     text-align: center;
     border-radius: 5px;
@@ -160,7 +180,7 @@ body {
     color: #000;
 }
 
-/* Highlighted Day - Adjusted to be smaller in month view */
+/* Highlighted Day */
 .days-grid div.active {
     background: none !important;
     border: 2px solid #1a5a7d !important;
@@ -169,7 +189,7 @@ body {
     font-size: 0.9rem;
 }
 
-/* Stats Card (Aligned with other two cards) */
+/* Stats Card */
 .stats-card {
     background: #fff;
     padding: 20px;
@@ -177,9 +197,9 @@ body {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     width: 400px;
     height: 350px;
-    grid-column: 3 / 4; /* Keeps it in the third column */
+    grid-column: 3 / 4;
     justify-self: start;
-    margin-top: -50px; /* Moves the stats card upwards */
+    margin-top: -50px;
 }
 
 /* Tabs */
@@ -265,6 +285,6 @@ body {
         grid-column: auto;
         justify-self: center;
         margin-bottom: 20px;
-        transform: none; /* Reset transform on smaller screens */
+        transform: none;
     }
 }
