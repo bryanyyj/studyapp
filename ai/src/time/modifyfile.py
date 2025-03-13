@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 
 # Load the dataset
-df = pd.read_csv("C:/Users/bryan/studyapp/ai/src/train/time_data.csv")
+df = pd.read_csv("C:/Users/bryan/studyapp/ai/src/time/time_data_modified.csv")
 
 # Mapping function for session duration
 duration_mapping = {
@@ -41,4 +41,4 @@ def generate_tomorrow_duration(row):
 df["Tomorrow Study Session Duration"] = df.apply(generate_tomorrow_duration, axis=1)
 
 # Save the modified dataset
-df.to_csv("C:/Users/bryan/studyapp/ai/src/train/time_data_modified.csv", index=False)
+df.to_csv("C:/Users/bryan/studyapp/ai/src/time/time_data_modified2.csv", index=False)

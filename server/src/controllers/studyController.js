@@ -147,6 +147,31 @@ module.exports.getSessionById = (req, res, next) => {
 
     model.selectStudySessionBySessionId(data, callback);
 };
+<<<<<<< HEAD
+
+// ##############################################################
+// CONTROLLER FUNCTION TO GET TIME PREDICTION BY REVIEW ID
+// ##############################################################
+module.exports.getTimePredictionByReviewId = (req, res, next) => {
+    const data = {
+        review_id: req.params.review_id
+    };
+
+    const callback = (error, results) => {
+        if (error) {
+            console.error("Error getTimePredictionByReviewId:", error);
+            return res.status(500).json(error);
+        }
+        if (results.length === 0) {
+            return res.status(404).json({ message: "Time prediction not found." });
+        }
+        res.status(200).json(results[0]);
+    };
+
+    model.selectTimePredictionByReviewId(data, callback);
+};
+
+=======
 // ##############################################################
 // CONTROLLER FUNCTION TO STORE THE END TIME (TOTAL TIME)
 // ##############################################################
@@ -212,3 +237,4 @@ module.exports.getSessionByDate = (req, res, next) => {
 
     model.getSessionByDate(data, callback);
 };
+>>>>>>> c81fce07966a170765852991ed391a8829676e16
