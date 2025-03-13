@@ -22,56 +22,46 @@ const Review = () => {
   const handleSubmitReview = (e) => {
     e.preventDefault();
   
+    // Ensure all necessary data exists
     const reviewData = {
-      sessionDuration: 45,
-      rating: selectedEmoji,
-      scheduleSatisfaction: selectedRating,
-      feedback: feedback,
-      user_id: 1 // Replace with dynamic user ID if applicable
+      sessionDuration: localStorage.getItem("studyDuration"), // Replace with dynamic value if needed
+      rating: selectedEmoji, // Ensure `selectedEmoji` is set
+      scheduleSatisfaction: selectedRating, // Ensure `selectedRating` is set
+      feedback: feedback, // Ensure `feedback` is set
+      user_id: localStorage.getItem("user_id"),
+      session_id: localStorage.getItem("session_id")
     };
+  
+    // Ensure user_id and session_id are available
+    if (!reviewData.user_id || !reviewData.session_id) {
+      alert("User or session information is missing.");
+      return;
+    }
   
     // API endpoints
     const reviewUrl = 'http://localhost:5000/api/reviews';
-    const aiReviewUrl = 'http://localhost:5000/api/reviews/ai';
-  
+    
     // Fetch request to submit the review
-    const submitReview = fetch(reviewUrl, {
+    fetch(reviewUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(reviewData),
-    }).then(response => {
+    })
+    .then(response => {
       console.log("Review API Response:", response); // Debugging
       if (!response.ok) throw new Error('Failed to submit review');
       return response.json();
+    })
+    .then((data) => {
+      console.log('Review submitted:', data);
+      localStorage.setItem('review_id', data.review_id); // Store review ID if returned
+      alert('Review submitted successfully!');
+      navigate("/profile");
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('An error occurred. Please try again.');
     });
-  
-    // Fetch request to process AI-related review analysis
-    const processAIReview = fetch(aiReviewUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(reviewData),
-    }).then(response => {
-      console.log("AI Review API Response:", response); // Debugging
-      if (!response.ok) throw new Error('Failed to process AI review');
-      return response.json();
-    });
-  
-    // Execute both fetch requests in parallel
-    Promise.all([submitReview, processAIReview])
-      .then(([reviewResponse, aiResponse]) => {
-        console.log('Review submitted:', reviewResponse);
-        console.log('AI review processed:', aiResponse);
-  
-       
-        localStorage.setItem('review_id', reviewResponse.review_id);
-  
-        alert('Review submitted successfully!');
-        navigate("/profile");
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        alert('An error occurred. Please try again.');
-      });
   };
   
   

@@ -46,6 +46,7 @@ module.exports.endStudySession = (req, res, next) => {
     };
 
     const callback = (error, results) => {
+        console.log(results)
         if (error) {
             console.error("Error endStudySession:", error);
             return res.status(500).json(error);
@@ -70,6 +71,7 @@ module.exports.calculateTotalStudyTime = (req, res, next) => {
     };
 
     const callback = (error, results) => {
+        console.log(results)
         if (error) {
             console.error("Error calculateTotalStudyTime:", error);
             return res.status(500).json(error);
@@ -116,10 +118,10 @@ module.exports.storeEndTime = (req, res, next) => {
             return res.status(500).json(error);
         }
         res.status(201).json({
-            message: "Study session ended successfully"
-        });
-    };
-
+            message: "Study session ended successfully",
+            studyDuration: res.locals.totalTime
+    });
+}
     model.insertTotalTime(data, callback);
 };
 
@@ -129,7 +131,7 @@ module.exports.storeEndTime = (req, res, next) => {
 module.exports.getSessionById = (req, res, next) => {
     const data = {
         // route param is :id
-        id: req.params.id
+        session_id: req.params.id
     };
 
     const callback = (error, results) => {
