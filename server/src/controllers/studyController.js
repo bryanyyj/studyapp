@@ -24,7 +24,7 @@ module.exports.startStudySession = (req, res, next) => {
         // results.insertId is the new session's ID
         res.status(201).json({
             message: "Study session started successfully",
-            session_id: results.insertId,
+            session_id: results.session_id,
             // Optionally return start_time if you need it
             // start_time: data.start_time
         });
@@ -102,7 +102,7 @@ module.exports.calculateTotalStudyTime = (req, res, next) => {
 // ##############################################################
 // CONTROLLER FUNCTION TO STORE THE END TIME (TOTAL TIME)
 // ##############################################################
-module.exports.storeEndTIme = (req, res, next) => {
+module.exports.storeEndTime = (req, res, next) => {
     const data = {
         time: res.locals.totalTime,
         session_id: req.body.session_id
@@ -153,12 +153,9 @@ module.exports.storeNotes = (req, res, next) => {
         return res.status(400).send("Missing required data (session_id).");
     }
     const data = {
-        notes: req.body.notes,
+        notes: req.body.feedback,
         session_id:req.body.session_id
     };
-
-    console.log("Calculated totalTime:", res.locals.totalTime);
-
     const callback = (error, results) => {
         if (error) {
             console.error("Error storeEndTime:", error);
@@ -170,4 +167,24 @@ module.exports.storeNotes = (req, res, next) => {
     };
 
     model.insertNotes(data, callback);
+};
+module.exports.storeBreakTime = (req, res, next) => {
+    if (!req.body.session_id) {
+        return res.status(400).send("Missing required data (session_id).");
+    }
+    const data = {
+        session_id:req.body.session_id
+
+    };
+    const callback = (error, results) => {
+        if (error) {
+            console.error("Error storeBreakTime:", error);
+            return res.status(500).json(error);
+        }
+        else{
+            next()
+        }
+    };
+
+    model.insertBreak(data, callback);
 };

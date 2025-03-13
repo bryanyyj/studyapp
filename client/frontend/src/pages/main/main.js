@@ -59,10 +59,40 @@ const Main = () => {
     pauseBreakTimer();
     setBreakTime(300);
   };
-
+  const sendStartTime = () => {
+    const startData = {
+      user_id: localStorage.getItem("user_id"),
+      subject_id: 1
+    };
+  
+    fetch("http://localhost:5000/api/study/start", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(startData),
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log("Start Time API Response:", data);
+        localStorage.setItem("session_id", data.session_id); // Store session_id for later use
+      })
+      .catch(error => console.error("Error sending start time:", error));
+  };
+  const endData = {
+    session_id:1
+  }
+  const sendEndTime = fetch("http://localhost:5000/api/study/end", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({endData}),
+  }).then(response => {
+    console.log("End Time API Response:", response); // Debugging
+    return response.json();
+  });
+  
   const startSession = () => {
     pauseBreakTimer();
     startStudyTimer();
+    sendStartTime()
   };
 
   const pauseSession = () => {

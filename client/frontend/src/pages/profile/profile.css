@@ -23,7 +23,7 @@ body {
     align-items: center;
     margin-bottom: 30px;
     position: relative;
-    left: -20px; /* Adjust this value as needed to shift left */
+    left: -20px;
 }
 
 /* Profile Container */
@@ -31,8 +31,24 @@ body {
     width: 100%;
     max-width: 1200px;
     display: grid;
-    grid-template-columns: 1fr 0px 1fr 0px 1fr;
-    gap: 30px;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px; /* Reduced gap */
+    justify-content: center;
+    align-items: start;
+    margin-left: -50px; /* Shift everything left */
+}
+
+/* Note Card (Shifted to Left) */
+.note-card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 400px; /* Slightly reduced width */
+    height: 350px;
+    grid-column: 1/2;
+    justify-self: start;
+    margin-left: -20px; /* Move more to the left */
 }
 
 /* Calendar Card */
@@ -41,9 +57,9 @@ body {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 450px;
+    width: 400px;
     height: 350px;
-    grid-column: 2/4;
+    grid-column: 2/3;
     justify-self: center;
 }
 
@@ -53,9 +69,9 @@ body {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 450px;
+    width: 400px;
     height: 350px;
-    grid-column: 4/4;
+    grid-column: 3/4;
     justify-self: start;
 }
 
@@ -123,31 +139,31 @@ body {
 }
 
 .days-grid div:hover {
-    background: rgba(86, 173, 220, 0.4); /* Hover effect */
+    background: rgba(86, 173, 220, 0.4);
     color: #000;
 }
 
 /* Highlighted Day */
 .days-grid div.active {
-    background: none !important; /* No background for active days */
-    border: 3px solid #1a5a7d !important; /* Border for selected day */
-    color: #1a5a7d !important; /* Day number color */
-    font-weight: bold; /* Keep the day number bold */
-    font-size: 20px; /* Slightly larger font for visibility */
+    background: none !important;
+    border: 3px solid #1a5a7d !important;
+    color: #1a5a7d !important;
+    font-weight: bold;
+    font-size: 20px;
 }
 
 /* Highlighted Days (for week or month view) */
 .days-grid div.highlight {
-    background: none !important; /* No background for highlighted days */
-    color: #1a5a7d !important; /* Keep the day number color */
-    font-weight: bold; /* Keep the number bold */
+    background: none !important;
+    color: #1a5a7d !important;
+    font-weight: bold;
 }
 
 .day-number {
-    font-size: 18px; /* Adjust font size */
+    font-size: 18px;
     font-weight: bold;
-    color: inherit; /* Inherit color from parent */
-    z-index: 2; /* Ensure number appears above any other content */
+    color: inherit;
+    z-index: 2;
 }
 
 /* Tabs */
@@ -229,7 +245,7 @@ body {
         justify-items: center;
     }
 
-    .card, .stats-card {
+    .note-card, .card, .stats-card {
         grid-column: auto;
         justify-self: center;
         margin-bottom: 20px;

@@ -6,8 +6,8 @@ const Profile = () => {
     const [currentYear, setCurrentYear] = useState(2025);
     const [selectedDay, setSelectedDay] = useState(1);
     const [activeView, setActiveView] = useState("day");
+    const [noteView, setNoteView] = useState("day");
 
-    // Store fetched data (e.g., { start_time, end_time, total_time, ... })
     const [sessionData, setSessionData] = useState(null);
 
     const monthNames = [
@@ -41,22 +41,7 @@ const Profile = () => {
 
         setCurrentMonth(newMonth);
         setCurrentYear(newYear);
-        setSelectedDay(1); // Reset to first day
-    };
-
-    const getHighlightedDays = () => {
-        if (activeView === "day") {
-            return [selectedDay];
-        } else if (activeView === "week") {
-            const selectedDate = new Date(currentYear, currentMonth, selectedDay);
-            const dayOfWeek = selectedDate.getDay(); // 0=Sun,1=Mon,...
-            const startOfWeek = selectedDay - (dayOfWeek === 0 ? 6 : dayOfWeek - 1);
-            return Array.from({ length: 7 }, (_, i) => startOfWeek + i)
-                .filter(day => day > 0 && day <= generateCalendar().length);
-        } else if (activeView === "month") {
-            return generateCalendar();
-        }
-        return [];
+        setSelectedDay(1);
     };
 
     useEffect(() => {
@@ -79,25 +64,18 @@ const Profile = () => {
 
     return (
         <>
-            {/* Logo outside of profile-container */}
             <div className="logo-container">
                 <img src="/logo.png" alt="App Logo" />
             </div>
 
             <div className="profile-container">
-                {/* Calendar Card - Now centered */}
                 <div className="card">
                     <div className="calendar-section">
                         <div className="month-nav-container">
-                            <button className="month-nav left" onClick={() => updateMonth(-1)}>
-                                &lt;
-                            </button>
+                            <button className="month-nav left" onClick={() => updateMonth(-1)}>&lt;</button>
                             <span className="month-display">{monthNames[currentMonth]}</span>
-                            <button className="month-nav right" onClick={() => updateMonth(1)}>
-                                &gt;
-                            </button>
+                            <button className="month-nav right" onClick={() => updateMonth(1)}>&gt;</button>
                         </div>
-
                         <div className="calendar">
                             <div className="day-names">
                                 <span>Mon</span><span>Tue</span><span>Wed</span>
@@ -108,9 +86,7 @@ const Profile = () => {
                                 {generateCalendar().map((day) => (
                                     <div
                                         key={day}
-                                        className={`day ${day === selectedDay ? "active" : ""} ${
-                                            getHighlightedDays().includes(day) ? "highlight" : ""
-                                        }`}
+                                        className={`day ${day === selectedDay ? "active" : ""}`}
                                         onClick={() => setSelectedDay(day)}
                                     >
                                         <span className="day-number">{day}</span>
@@ -120,53 +96,50 @@ const Profile = () => {
                         </div>
                     </div>
                 </div>
-
-                {/* Stats Card - Now positioned to the right */}
+                
                 <div className="card stats-card">
                     <div className="tabs">
                         {["day", "week", "month"].map((view) => (
                             <span
                                 key={view}
                                 className={`tab ${activeView === view ? "active" : ""}`}
-                                onClick={() => {
-                                    setActiveView(view);
-                                    setSelectedDay(1);
-                                }}
+                                onClick={() => setActiveView(view)}
                             >
                                 {view.charAt(0).toUpperCase() + view.slice(1)}
                             </span>
                         ))}
                     </div>
-
                     <h3 className="selected-date">{formatDate(selectedDay, currentMonth, currentYear)}</h3>
-
-                    <div className="stat-box">
-                        <span>Total</span>
-                        <h2 className="total-time">
-                            {sessionData && sessionData.total_time ? sessionData.total_time : "00:00:00"}
-                        </h2>
+                    <div className="stat-box"><span>Total</span>
+                        <h2 className="total-time">{sessionData?.total_time || "00:00:00"}</h2>
                     </div>
-
-                    <div className="stat-box">
-                        <span>Max Focus</span>
+                    <div className="stat-box"><span>Max Focus</span>
                         <h2 className="max-focus">00:00:00</h2>
                     </div>
-
                     <div className="small-stats-container">
-                        <div className="stat-box small">
-                            <span>Started</span>
-                            <h4 className="start-time">
-                                {sessionData && sessionData.start_time ? sessionData.start_time : "--:--:--"}
-                            </h4>
+                        <div className="stat-box small"><span>Started</span>
+                            <h4 className="start-time">{sessionData?.start_time || "--:--:--"}</h4>
                         </div>
-
-                        <div className="stat-box small">
-                            <span>Finished</span>
-                            <h4 className="end-time">
-                                {sessionData && sessionData.end_time ? sessionData.end_time : "--:--:--"}
-                            </h4>
+                        <div className="stat-box small"><span>Finished</span>
+                            <h4 className="end-time">{sessionData?.end_time || "--:--:--"}</h4>
                         </div>
                     </div>
+                </div>
+                
+                <div className="card note-card">
+                    <h3>Study Session Notes</h3>
+                    <div className="tabs">
+                        {["day", "week", "month"].map((view) => (
+                            <span
+                                key={view}
+                                className={`tab ${noteView === view ? "active" : ""}`}
+                                onClick={() => setNoteView(view)}
+                            >
+                                {view.charAt(0).toUpperCase() + view.slice(1)}
+                            </span>
+                        ))}
+                    </div>
+                    <p>Notes for {noteView.charAt(0).toUpperCase() + noteView.slice(1)} View</p>
                 </div>
             </div>
         </>

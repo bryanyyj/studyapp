@@ -43,8 +43,14 @@ module.exports.insertNotes = (data, callback) => {
         WHERE id = ?;
     `;
     const VALUES = [data.notes,data.session_id];
-    pool.query(SQLSTATEMENT, VALUES, (err, result) => {
-        if (err) return callback(err, null);
-        callback(null, { insertId: result.insertId });
-    });
+    pool.query(SQLSTATEMENT, VALUES, callback);
+};
+module.exports.insertBreak = (data, callback) => {
+    const SQLSTATEMENT = `
+        UPDATE Study_Sessions
+        SET break_time = ?
+        WHERE id = ?;
+    `;
+    const VALUES = [data.notes,data.session_id];
+    pool.query(SQLSTATEMENT, VALUES, callback);
 };
