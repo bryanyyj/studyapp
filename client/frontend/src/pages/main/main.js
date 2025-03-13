@@ -13,6 +13,8 @@ const Main = () => {
   const [subject] = useState("📘 Study Math");
   const [studyInterval, setStudyInterval] = useState(null);
   const [breakInterval, setBreakInterval] = useState(null);
+  const [breakStartTime, setBreakStartTime] = useState(null); // Store the timestamp when break starts
+  const [breakTimeMinutes, setBreakTimeMinutes] = useState(0); // Store break duration in minutes
 
   useEffect(() => {
     const updateDate = () => {
@@ -79,7 +81,10 @@ const Main = () => {
   };
   const sendEndTime = () => {
     const session_id = localStorage.getItem("session_id"); // Get the session ID from localStorage
-  
+    const endData = {
+      session_id,
+      breakTimeMinutes
+    };
     if (!session_id) {
       console.error("No session ID found!");
       return;
@@ -89,7 +94,7 @@ const Main = () => {
     fetch("http://localhost:5000/api/study/end", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ session_id }),
+      body: JSON.stringify({ endData }),
     })
       .then(response => response.json())
       .then(data => {
@@ -99,14 +104,23 @@ const Main = () => {
       .catch(error => console.error("Error sending end time:", error));
   };
   
-  const startSession = () => {
-    pauseBreakTimer();
-    startStudyTimer();
-    sendStartTime()
-  };
+  
+const startSession = () => {
+  pauseBreakTimer();
+
+  if (breakStartTime) {
+    const breakDurationSeconds = Math.floor((Date.now() - breakStartTime) / 1000); // Calculate break duration
+    setBreakTimeMinutes(prev => prev + Math.floor(breakDurationSeconds / 60)); // Convert to minutes and update state
+  }
+
+  setBreakStartTime(null); // Reset break start time
+  startStudyTimer();
+  sendStartTime();
+};
 
   const pauseSession = () => {
     pauseStudyTimer();
+    setBreakStartTime(Date.now()); // Store break start time
     startBreakTimer();
   };
 

@@ -47,7 +47,6 @@ module.exports.createReview = (req, res, next) => {
  *  - scheduleSatisfaction (number)
  */
 module.exports.callAI = (req, res) => {
-  const { sessionDuration, breakTime, scheduleSatisfaction, review_id } = req.body;
 
   // Validate input
   if (sessionDuration == null || breakTime == null || scheduleSatisfaction == null) {
@@ -98,6 +97,25 @@ module.exports.getAllReviews = (req, res, next) =>{
           res.status(500).json(error);
       } 
       else res.status(200).json(results);
+  }
+
+  reviewsModel.selectAllReviews(callback);
+}
+
+module.exports.getReviewById = (req, res, next) =>{
+  const data = {
+    review_id: req.body.review_id
+  }
+  const callback = (error, results, fields) => {
+    console.log(results)
+      if (error) {
+          console.error("Error getAllReviews:", error);
+          res.status(500).json(error);
+      } 
+      else {
+        res.locals.sessionDuration = results.sessionDuration
+        res.locals.scheduleSatisfaction =  results.scheduleSatisfaction
+      }
   }
 
   reviewsModel.selectAllReviews(callback);

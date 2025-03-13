@@ -175,8 +175,8 @@ module.exports.storeBreakTime = (req, res, next) => {
         return res.status(400).send("Missing required data (session_id).");
     }
     const data = {
-        session_id:req.body.session_id
-
+        session_id:req.body.session_id,
+        breakTime: req.body.breakTime
     };
     const callback = (error, results) => {
         if (error) {
