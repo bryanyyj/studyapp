@@ -24,7 +24,7 @@ module.exports.startStudySession = (req, res, next) => {
         // results.insertId is the new session's ID
         res.status(201).json({
             message: "Study session started successfully",
-            session_id: results.insertId,
+            session_id: results.session_id,
             // Optionally return start_time if you need it
             // start_time: data.start_time
         });
@@ -46,6 +46,7 @@ module.exports.endStudySession = (req, res, next) => {
     };
 
     const callback = (error, results) => {
+        console.log(results)
         if (error) {
             console.error("Error endStudySession:", error);
             return res.status(500).json(error);
@@ -64,11 +65,13 @@ module.exports.endStudySession = (req, res, next) => {
 // DEFINE CONTROLLER FUNCTION TO CALCULATE TOTAL STUDY TIME
 // ##############################################################
 module.exports.calculateTotalStudyTime = (req, res, next) => {
+    
     const data = {
         session_id: req.body.session_id
     };
 
     const callback = (error, results) => {
+        console.log(results)
         if (error) {
             console.error("Error calculateTotalStudyTime:", error);
             return res.status(500).json(error);
@@ -101,7 +104,7 @@ module.exports.calculateTotalStudyTime = (req, res, next) => {
 // ##############################################################
 // CONTROLLER FUNCTION TO STORE THE END TIME (TOTAL TIME)
 // ##############################################################
-module.exports.storeEndTIme = (req, res, next) => {
+module.exports.storeEndTime = (req, res, next) => {
     const data = {
         time: res.locals.totalTime,
         session_id: req.body.session_id
@@ -115,10 +118,10 @@ module.exports.storeEndTIme = (req, res, next) => {
             return res.status(500).json(error);
         }
         res.status(201).json({
-            message: "Study session ended successfully"
-        });
-    };
-
+            message: "Study session ended successfully",
+            studyDuration: res.locals.totalTime
+    });
+}
     model.insertTotalTime(data, callback);
 };
 
@@ -128,7 +131,7 @@ module.exports.storeEndTIme = (req, res, next) => {
 module.exports.getSessionById = (req, res, next) => {
     const data = {
         // route param is :id
-        id: req.params.id
+        session_id: req.params.id
     };
 
     const callback = (error, results) => {
@@ -144,6 +147,7 @@ module.exports.getSessionById = (req, res, next) => {
 
     model.selectStudySessionBySessionId(data, callback);
 };
+<<<<<<< HEAD
 
 // ##############################################################
 // CONTROLLER FUNCTION TO GET TIME PREDICTION BY REVIEW ID
@@ -167,3 +171,70 @@ module.exports.getTimePredictionByReviewId = (req, res, next) => {
     model.selectTimePredictionByReviewId(data, callback);
 };
 
+=======
+// ##############################################################
+// CONTROLLER FUNCTION TO STORE THE END TIME (TOTAL TIME)
+// ##############################################################
+module.exports.storeNotes = (req, res, next) => {
+    if (!req.body.session_id) {
+        return res.status(400).send("Missing required data (session_id).");
+    }
+    const data = {
+        notes: req.body.feedback,
+        session_id:req.body.session_id
+    };
+    const callback = (error, results) => {
+        if (error) {
+            console.error("Error storeEndTime:", error);
+            return res.status(500).json(error);
+        }
+        else{
+            next()
+        }
+    };
+
+    model.insertNotes(data, callback);
+};
+module.exports.storeBreakTime = (req, res, next) => {
+    if (!req.body.session_id) {
+        return res.status(400).send("Missing required data (session_id).");
+    }
+    const data = {
+        session_id:req.body.session_id
+
+    };
+    const callback = (error, results) => {
+        if (error) {
+            console.error("Error storeBreakTime:", error);
+            return res.status(500).json(error);
+        }
+        else{
+            next()
+        }
+    };
+
+    model.insertBreak(data, callback);
+};
+module.exports.getSessionByDate = (req, res, next) => {
+    const data = {
+        // route param is :id
+        sessionDate: req.params.date,
+        user_id: req.query.user_id
+    };
+
+    const callback = (error, results) => {
+        console.log(data)
+        console.log(results)
+        if (error) {
+            console.error("Error getSessionById:", error);
+            return res.status(500).json(error);
+        }
+        if (results.length === 0) {
+            return res.status(404).json({ message: "Session not found." });
+        }
+        res.status(200).json(results);
+    };
+
+    model.getSessionByDate(data, callback);
+};
+>>>>>>> c81fce07966a170765852991ed391a8829676e16

@@ -218,7 +218,7 @@ module.exports.register = (req, res, next) =>
                 res.status(500).json(error);
             }
             res.locals.message = `User ${req.body.username} created successfully.`;
-            res.locals.user_id = results.insertId
+            res.locals.user_id = results.user_id
             next()
         }
     

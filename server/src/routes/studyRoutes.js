@@ -9,10 +9,11 @@ router.post("/start", studyController.startStudySession);
 router.put("/end",
     studyController.endStudySession,
     studyController.calculateTotalStudyTime,
-    studyController.storeEndTIme
+    studyController.storeEndTime
 );
 
 // Get a study session by ID (e.g. GET /study/1)
 router.get("/:id", studyController.getSessionById);
+router.get("/date/:date", studyController.getSessionByDate);
 
 module.exports = router;

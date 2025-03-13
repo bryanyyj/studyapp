@@ -16,9 +16,8 @@ module.exports.insertReview = (data, callback) => {
 
     pool.query(SQLSTATEMENT, VALUES, function (err, result) {
         if (err) return callback(err, null);
-
-        // In MySQL, result.insertId is the auto-incremented primary key
-        callback(null, { review_id: result.insertId });
+    
+        callback(null, { review_id: result.lastID });
     });
 };
 module.exports.selectAllReviews = (callback) => {

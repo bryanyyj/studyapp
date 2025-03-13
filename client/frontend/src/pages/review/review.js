@@ -21,57 +21,50 @@ const Review = () => {
   // Handle form submission
   const handleSubmitReview = (e) => {
     e.preventDefault();
-    // Example: Hard-coded sessionDuration of 45 minutes
-    // If you track the actual session length in state or props, use that instead
+  
+    // Ensure all necessary data exists
     const reviewData = {
-      sessionDuration: 45,
-      // This might store the "study session" rating as selectedEmoji
-      rating: selectedEmoji,
-      // This might store "AI satisfaction" as selectedRating
-      scheduleSatisfaction: selectedRating,
-      feedback: feedback,
-      user_id: 1 // or wherever you get the logged-in user ID
+      sessionDuration: localStorage.getItem("studyDuration"), // Replace with dynamic value if needed
+      rating: selectedEmoji, // Ensure `selectedEmoji` is set
+      scheduleSatisfaction: selectedRating, // Ensure `selectedRating` is set
+      feedback: feedback, // Ensure `feedback` is set
+      user_id: localStorage.getItem("user_id"),
+      session_id: localStorage.getItem("session_id")
     };
-
-    // The endpoint URL for creating a new review
-    const url = 'http://localhost:5000/api/reviews';
-
-    fetch(url, {
+  
+    // Ensure user_id and session_id are available
+    if (!reviewData.user_id || !reviewData.session_id) {
+      alert("User or session information is missing.");
+      return;
+    }
+  
+    // API endpoints
+    const reviewUrl = 'http://localhost:5000/api/reviews';
+    
+    // Fetch request to submit the review
+    fetch(reviewUrl, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      // The server expects fields named "username", "email", and "password"
-      // If your server expects "name" instead of "username", adjust accordingly
-      body: JSON.stringify({
-        sessionDuration: 45,
-      // This might store the "study session" rating as selectedEmoji
-      rating: selectedEmoji,
-      // This might store "AI satisfaction" as selectedRating
-      scheduleSatisfaction: selectedRating,
-      feedback: feedback,
-      user_id: 1 // or wherever you get the logged-in user ID
-      })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(reviewData),
     })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        // Registration successful
-        console.log('Review successful:', data);
-        alert('Review submitted successfully!');
-        navigate("/profile")
-      })
-      .catch(error => {
-        // Handle errors
-        console.error('Review error:', error);
-        alert('Review submission failed. Please try again.');
-      });
+    .then(response => {
+      console.log("Review API Response:", response); // Debugging
+      if (!response.ok) throw new Error('Failed to submit review');
+      return response.json();
+    })
+    .then((data) => {
+      console.log('Review submitted:', data);
+      localStorage.setItem('review_id', data.review_id); // Store review ID if returned
+      alert('Review submitted successfully!');
+      navigate("/profile");
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('An error occurred. Please try again.');
+    });
   };
-
+  
+  
   return (
     <div className="body">
       <div className="logo">

@@ -6,9 +6,9 @@ const Profile = () => {
     const [currentYear, setCurrentYear] = useState(2025);
     const [selectedDay, setSelectedDay] = useState(1);
     const [activeView, setActiveView] = useState("day");
-
-    // Store fetched data (e.g., { start_time, end_time, total_time, ... })
-    const [sessionData, setSessionData] = useState(null);
+    const [noteView, setNoteView] = useState("day");
+    const user_id = localStorage.getItem("user_id")
+    const [sessionData, setSessionData] = useState([]); 
 
     const monthNames = [
       "January", "February", "March", "April", "May", "June",
@@ -20,6 +20,34 @@ const Profile = () => {
         return date.toLocaleDateString("en-GB", {
             day: "2-digit", month: "short", year: "2-digit"
         });
+    };
+
+    // Function to get the first and last days of the week for a given date
+    const getWeekRange = (day) => {
+        const date = new Date(currentYear, currentMonth, day);
+        // Find Monday (first day of week) - adjusting for JS Date's Sunday=0 system
+        const dayOfWeek = date.getDay() === 0 ? 7 : date.getDay(); // Convert Sunday from 0 to 7
+        const mondayOffset = dayOfWeek - 1;
+        
+        const mondayDate = new Date(date);
+        mondayDate.setDate(date.getDate() - mondayOffset);
+        
+        const sundayDate = new Date(mondayDate);
+        sundayDate.setDate(mondayDate.getDate() + 6);
+        
+        // Return all days in the week as an array of day numbers
+        const weekDays = [];
+        const currentDate = new Date(mondayDate);
+        while (currentDate <= sundayDate) {
+            // Only include days that belong to the current month view
+            if (currentDate.getMonth() === currentMonth && 
+                currentDate.getFullYear() === currentYear) {
+                weekDays.push(currentDate.getDate());
+            }
+            currentDate.setDate(currentDate.getDate() + 1);
+        }
+        
+        return weekDays;
     };
 
     const generateCalendar = () => {
@@ -41,141 +69,169 @@ const Profile = () => {
 
         setCurrentMonth(newMonth);
         setCurrentYear(newYear);
-        setSelectedDay(1); // Reset to first day
+        setSelectedDay(1);
     };
-
-    const getHighlightedDays = () => {
-        if (activeView === "day") {
-            return [selectedDay];
-        } else if (activeView === "week") {
-            const selectedDate = new Date(currentYear, currentMonth, selectedDay);
-            const dayOfWeek = selectedDate.getDay(); // 0=Sun,1=Mon,...
-            const startOfWeek = selectedDay - (dayOfWeek === 0 ? 6 : dayOfWeek - 1);
-            return Array.from({ length: 7 }, (_, i) => startOfWeek + i)
-                .filter(day => day > 0 && day <= generateCalendar().length);
-        } else if (activeView === "month") {
-            return generateCalendar();
-        }
-        return [];
+    //Function to call backend to insert into the notes
+    const handleDayClick = (day) => {
+        setSelectedDay(day);
+        fetchStudySession(day, currentMonth, currentYear);
     };
-
-    // -------------------------------------------------------------
-    // useEffect to call GET /study/:session_id (hardcoded session_id=1)
-    // -------------------------------------------------------------
+    const fetchStudySession = (day, month, year) => {
+        const formattedDate = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+        
+        fetch(`http://localhost:5000/api/study/date/${formattedDate}?user_id=${user_id}`, { method: "GET" })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Failed to fetch session data");
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Fetched session data:", data);
+                // Set sessionData to an empty array if no data is returned
+                setSessionData(data || []);
+            })
+            .catch(error => {
+                console.error("Error fetching session:", error);
+                // Set sessionData to an empty array in case of error
+                setSessionData([]);
+            });
+    };
+    
+    // Fetch session data when component loads
     useEffect(() => {
-        fetch("http://localhost:5000/api/study/1", { method: "GET" })
-          .then(response => {
-              if (!response.ok) {
-                  throw new Error("Failed to fetch session data");
-              }
-              return response.json();
-          })
-          .then(data => {
-              console.log("Fetched session data:", data);
-              setSessionData(data);
-          })
-          .catch(error => {
-              console.error("Error fetching session:", error);
-              setSessionData(null);
-          });
+        fetchStudySession(selectedDay, currentMonth, currentYear);
     }, [currentMonth, currentYear, selectedDay]);
-    // ^ This re-fetches whenever month/year/day changes. Adjust if needed.
+    
+    // Function to determine if a day should be highlighted
+    const shouldHighlightDay = (day) => {
+        if (activeView === "day") {
+            return day === selectedDay;
+        } else if (activeView === "week") {
+            return getWeekRange(selectedDay).includes(day);
+        } else if (activeView === "month") {
+            return true; // Highlight all days in month view
+        }
+        return false;
+    };
+
+    // Format the display date range based on the active view
+    const getDisplayDateRange = () => {
+        if (activeView === "day") {
+            return formatDate(selectedDay, currentMonth, currentYear);
+        } else if (activeView === "week") {
+            const weekDays = getWeekRange(selectedDay);
+            if (weekDays.length > 0) {
+                const firstDay = weekDays[0];
+                const lastDay = weekDays[weekDays.length - 1];
+                return `${formatDate(firstDay, currentMonth, currentYear)} - ${formatDate(lastDay, currentMonth, currentYear)}`;
+            }
+            return formatDate(selectedDay, currentMonth, currentYear);
+        } else if (activeView === "month") {
+            return `${monthNames[currentMonth]} ${currentYear}`;
+        }
+        return formatDate(selectedDay, currentMonth, currentYear);
+    };
 
     return (
-        <div className="profile-container">
+        <>
             <div className="logo-container">
                 <img src="/logo.png" alt="App Logo" />
             </div>
 
-            {/* Calendar Card */}
-            <div className="card calendar-card">
-                <div className="calendar-section">
-                    <div className="month-nav-container">
-                        <button className="month-nav left" onClick={() => updateMonth(-1)}>
-                            &lt;
-                        </button>
-                        <span className="month-display">{monthNames[currentMonth]}</span>
-                        <button className="month-nav right" onClick={() => updateMonth(1)}>
-                            &gt;
-                        </button>
-                    </div>
+            <div className="card note-card">
+    <h3>Study Session Notes</h3>
+    <div className="tabs">
+        {["day", "week", "month"].map((view) => (
+            <span
+                key={view}
+                className={`tab ${noteView === view ? "active" : ""}`}
+                onClick={() => setNoteView(view)}
+            >
+                {view.charAt(0).toUpperCase() + view.slice(1)}
+            </span>
+        ))}
+    </div>
+    <p>Notes for {noteView.charAt(0).toUpperCase() + noteView.slice(1)} View</p>
 
-                    <div className="calendar">
-                        <div className="day-names">
-                            <span>Mon</span><span>Tue</span><span>Wed</span>
-                            <span>Thu</span><span>Fri</span><span>Sat</span>
-                            <span>Sun</span>
+    {/* Displaying Study Sessions dynamically */}
+    <div className="study-sessions-container">
+        {sessionData.length > 0 ? (
+            sessionData.map((session, index) => (
+                <div className="session-card" key={index}>
+                    <div className="session-start-time">
+                        <strong>Start Time:</strong> {session.start_time || "N/A"}
+                    </div>
+                    <div className="session-notes">
+                        <strong>Notes:</strong> {session.notes || "No notes provided"}
+                    </div>
+                </div>
+            ))
+        ) : (
+            <p>No study sessions available for this date.</p>
+        )}
+    </div>
+</div>
+
+            <div className="profile-container">
+                <div className="card">
+                    <div className="calendar-section">
+                        <div className="month-nav-container">
+                            <button className="month-nav left" onClick={() => updateMonth(-1)}>&lt;</button>
+                            <span className="month-display">{monthNames[currentMonth]}</span>
+                            <button className="month-nav right" onClick={() => updateMonth(1)}>&gt;</button>
                         </div>
-                        <div className="days-grid">
-                            {generateCalendar().map((day) => (
-                                <div
-                                    key={day}
-                                    className={`day ${
-                                        day === selectedDay ? "active" : ""
-                                    } ${
-                                        getHighlightedDays().includes(day) ? "highlight" : ""
-                                    }`}
-                                    onClick={() => setSelectedDay(day)}
-                                >
-                                    <span className="day-number">{day}</span>
-                                </div>
-                            ))}
+                        <div className="calendar">
+                            <div className="day-names">
+                                <span>Mon</span><span>Tue</span><span>Wed</span>
+                                <span>Thu</span><span>Fri</span><span>Sat</span>
+                                <span>Sun</span>
+                            </div>
+                            <div className="days-grid">
+                                {generateCalendar().map((day) => (
+                                    <div
+                                        key={day}
+                                        className={`day ${shouldHighlightDay(day) ? "active" : ""}`}
+                                        onClick={() => handleDayClick(day)}
+                                    >
+                                        <span className="day-number">{day}</span>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            {/* Stats Card */}
-            <div className="card stats-card">
-                <div className="stats-section">
+                
+                <div className="card stats-card">
                     <div className="tabs">
                         {["day", "week", "month"].map((view) => (
                             <span
                                 key={view}
                                 className={`tab ${activeView === view ? "active" : ""}`}
-                                onClick={() => {
-                                    setActiveView(view);
-                                    setSelectedDay(1); // optional reset
-                                }}
+                                onClick={() => setActiveView(view)}
                             >
                                 {view.charAt(0).toUpperCase() + view.slice(1)}
                             </span>
                         ))}
                     </div>
-                    <div className="stats">
-                        <h3 className="selected-date">{formatDate(selectedDay, currentMonth, currentYear)}</h3>
-                        <div className="stat-box">
-                            <span>Total</span>
-                            <h2 className="total-time">
-                                {sessionData && sessionData.total_time
-                                    ? sessionData.total_time
-                                    : "00:00:00"}
-                            </h2>
+                    <h3 className="selected-date">{getDisplayDateRange()}</h3>
+                    <div className="stat-box"><span>Total</span>
+                        <h2 className="total-time">{sessionData?.total_time || "00:00:00"}</h2>
+                    </div>
+                    <div className="stat-box"><span>Max Focus</span>
+                        <h2 className="max-focus">00:00:00</h2>
+                    </div>
+                    <div className="small-stats-container">
+                        <div className="stat-box small"><span>Started</span>
+                            <h4 className="start-time">{sessionData?.start_time || "--:--:--"}</h4>
                         </div>
-                        <div className="stat-box">
-                            <span>Max Focus</span>
-                            <h2 className="max-focus">00:00:00</h2>
-                        </div>
-                        <div className="stat-box small">
-                            <span>Started</span>
-                            <h4 className="start-time">
-                                {sessionData && sessionData.start_time
-                                    ? sessionData.start_time
-                                    : "--:--:--"}
-                            </h4>
-                        </div>
-                        <div className="stat-box small">
-                            <span>Finished</span>
-                            <h4 className="end-time">
-                                {sessionData && sessionData.end_time
-                                    ? sessionData.end_time
-                                    : "--:--:--"}
-                            </h4>
+                        <div className="stat-box small"><span>Finished</span>
+                            <h4 className="end-time">{sessionData?.end_time || "--:--:--"}</h4>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 

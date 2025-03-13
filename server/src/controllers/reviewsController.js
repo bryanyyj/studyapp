@@ -5,37 +5,38 @@ const axios = require('axios');
 /** 
  * 1) Create Review in DB (no AI call)
  */
-module.exports.createReview = (req, res) => {
+module.exports.createReview = (req, res, next) => {
   const data = {
-    sessionDuration: req.body.sessionDuration,
-    rating: req.body.rating,
-    feedback: req.body.feedback || '',
-    user_id: req.body.user_id,
-    scheduleSatisfaction: req.body.scheduleSatisfaction
+      sessionDuration: req.body.sessionDuration,
+      rating: req.body.rating,
+      feedback: req.body.feedback || '',
+      user_id: req.body.user_id,
+      scheduleSatisfaction: req.body.scheduleSatisfaction
   };
 
   if (
-    data.sessionDuration == null ||
-    data.rating == null ||
-    data.scheduleSatisfaction == null ||
-    data.user_id == null
+      data.sessionDuration == undefined ||
+      data.rating == undefined ||
+      data.scheduleSatisfaction == undefined ||
+      data.user_id == undefined
   ) {
-    return res.status(400).json({ error: 'Missing required fields.' });
+      res.status(400).send("Missing required data.");
+      return;
   }
 
-  reviewsModel.insertReview(data, (err, dbResult) => {
-    if (err) {
-      console.error('Error inserting review:', err);
-      return res.status(500).json({ error: 'Internal server error' });
-    }
+  const callback = (error, results) => {
+      if (error) {
+          console.error("Error: createReview", error);
+          res.status(500).json(error);
+      } else {
+          res.status(201).json({
+              review_id: results.review_id});
+      }
+  };
 
-    // Return a success response with the DB result
-    return res.status(201).json({
-      message: 'Review created successfully',
-      dbData: dbResult
-    });
-  });
+  reviewsModel.insertReview(data, callback);
 };
+
 
 /**
  * 2) Separate Endpoint to Call AI

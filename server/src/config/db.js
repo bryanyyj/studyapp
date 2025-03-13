@@ -22,6 +22,7 @@ db.serialize(() => {
     DROP TABLE IF EXISTS users;
     DROP TABLE IF EXISTS reviews;
     DROP TABLE IF EXISTS time_prediction;
+    DROP TABLE IF EXISTS Todos;
   `, (err) => {
     if (err) {
       console.error('Error dropping tables:', err.message);
@@ -62,6 +63,8 @@ db.serialize(() => {
       start_time DATETIME NOT NULL,
       end_time DATETIME,
       total_time INTEGER,
+      break_time INTEGER,
+      notes TEXT,
       FOREIGN KEY (user_id) REFERENCES users(id),
       FOREIGN KEY (subject_id) REFERENCES subjects(id)
     );
@@ -88,8 +91,8 @@ db.serialize(() => {
       user_id INTEGER NOT NULL,
       scheduleSatisfaction INTEGER NOT NULL,
       sessionDuration INTEGER NOT NULL,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       feedback TEXT,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (user_id) REFERENCES users(id)
     );
 

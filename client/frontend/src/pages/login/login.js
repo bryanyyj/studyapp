@@ -36,11 +36,8 @@ const Login = () => {
       })
       .then(data => {
         console.log("Login successful:", data);
-
-        // TODO: Possibly store tokens or user info from `data` in state/storage
-
-        // Redirect to /survey after successful login
-        navigate("/survey");
+        localStorage.setItem("user_id", data.user_id);
+         navigate("/survey");
       })
       .catch(error => {
         console.error("Login error:", error);
