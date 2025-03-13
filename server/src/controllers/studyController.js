@@ -104,7 +104,7 @@ module.exports.calculateTotalStudyTime = (req, res, next) => {
 // ##############################################################
 // CONTROLLER FUNCTION TO STORE THE END TIME (TOTAL TIME)
 // ##############################################################
-module.exports.storeEndTime = (req, res, next) => {
+module.exports.storeTotalTime = (req, res, next) => {
     const data = {
         time: res.locals.totalTime,
         session_id: req.body.session_id
@@ -120,7 +120,7 @@ module.exports.storeEndTime = (req, res, next) => {
         res.status(201).json({
             message: "Study session ended successfully",
             studyDuration: res.locals.totalTime
-    });
+    });next()
 }
     model.insertTotalTime(data, callback);
 };
@@ -147,31 +147,6 @@ module.exports.getSessionById = (req, res, next) => {
 
     model.selectStudySessionBySessionId(data, callback);
 };
-<<<<<<< HEAD
-
-// ##############################################################
-// CONTROLLER FUNCTION TO GET TIME PREDICTION BY REVIEW ID
-// ##############################################################
-module.exports.getTimePredictionByReviewId = (req, res, next) => {
-    const data = {
-        review_id: req.params.review_id
-    };
-
-    const callback = (error, results) => {
-        if (error) {
-            console.error("Error getTimePredictionByReviewId:", error);
-            return res.status(500).json(error);
-        }
-        if (results.length === 0) {
-            return res.status(404).json({ message: "Time prediction not found." });
-        }
-        res.status(200).json(results[0]);
-    };
-
-    model.selectTimePredictionByReviewId(data, callback);
-};
-
-=======
 // ##############################################################
 // CONTROLLER FUNCTION TO STORE THE END TIME (TOTAL TIME)
 // ##############################################################
@@ -203,6 +178,7 @@ module.exports.storeBreakTime = (req, res, next) => {
         session_id:req.body.session_id,
         breakTime: req.body.breakTime
     };
+    console.log(data)
     const callback = (error, results) => {
         if (error) {
             console.error("Error storeBreakTime:", error);
@@ -237,4 +213,27 @@ module.exports.getSessionByDate = (req, res, next) => {
 
     model.getSessionByDate(data, callback);
 };
->>>>>>> c81fce07966a170765852991ed391a8829676e16
+// ##############################################################
+// DEFINE CONTROLLER FUNCTION GETTING STUDY SESSION BY SESSION ID
+// ##############################################################
+module.exports.getSessionByBodyId = (req, res, next) => {
+    const data = {
+        // route param is :id
+        session_id: req.body.session_id
+    };
+
+    const callback = (error, results) => {
+        console.log(results)
+        if (error) {
+            console.error("Error getSessionById:", error);
+            return res.status(500).json(error);
+        }
+        if (results.length === 0) {
+            return res.status(404).json({ message: "Session not found." });
+        }
+        res.locals.session = results[0]
+        next()
+    };
+
+    model.selectStudySessionBySessionId(data, callback);
+};

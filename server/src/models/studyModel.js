@@ -36,22 +36,6 @@ module.exports.insertTotalTime = (data, callback) => {
     const VALUES = [data.time, data.session_id];
     pool.query(SQLSTATEMENT, VALUES, callback);
 };
-<<<<<<< HEAD
-
-
-// ##############################################################
-// MODEL FUNCTION TO SELECT TIME PREDICTION BY REVIEW ID
-// ##############################################################
-module.exports.selectTimePredictionByReviewId = (data, callback) => {
-    const SQLSTATEMENT = `
-        SELECT * FROM time_prediction
-        WHERE review_id = ?
-    `;
-    const VALUES = [data.review_id];
-
-    pool.query(SQLSTATEMENT, VALUES, callback);
-};
-=======
 module.exports.insertNotes = (data, callback) => {
     const SQLSTATEMENT = `
         UPDATE Study_Sessions
@@ -67,7 +51,7 @@ module.exports.insertBreak = (data, callback) => {
         SET break_time = ?
         WHERE id = ?;
     `;
-    const VALUES = [data.notes,data.session_id];
+    const VALUES = [data.breakTime,data.session_id];
     pool.query(SQLSTATEMENT, VALUES, callback);
 };
 module.exports.getSessionByDate = (data, callback) => {
@@ -79,4 +63,3 @@ module.exports.getSessionByDate = (data, callback) => {
 
     pool.query(SQLSTATEMENT, VALUES, callback);
 };
->>>>>>> c81fce07966a170765852991ed391a8829676e16

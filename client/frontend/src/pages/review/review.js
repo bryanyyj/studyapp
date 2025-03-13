@@ -8,6 +8,39 @@ const Review = () => {
   const [selectedRating, setSelectedRating] = useState(null);
   const [feedback, setFeedback] = useState('');
 
+
+
+
+  const AIpredict = () => {
+    const session_id = localStorage.getItem("session_id"); // Get the session ID from localStorage
+    const review_id = localStorage.getItem("review_id"); // Get the review_id from localStorage
+  
+    // Ensure session_id and review_id are available
+    if (!session_id || !review_id) {
+      console.error("Session ID or Review ID not found!");
+      return;
+    }
+  
+    // Define AIdata based on the values from localStorage
+    const AIdata = {
+      session_id,
+      review_id
+    };
+  
+    // Send AI prediction API request
+    fetch("http://localhost:5000/api/reviews/ai", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(AIdata), // Send AIdata as the request body
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log("AI Prediction Response:", data);
+        // Handle the response data as needed
+      })
+      .catch(error => console.error("Error fetching AI prediction:", error));
+  };
+
   // Handle emoji selection
   const handleEmojiClick = (value) => {
     setSelectedEmoji(value); // e.g. 1, 2, 3, 4, 5
@@ -56,6 +89,7 @@ const Review = () => {
       console.log('Review submitted:', data);
       localStorage.setItem('review_id', data.review_id); // Store review ID if returned
       alert('Review submitted successfully!');
+      AIpredict();  // This will call the AI route for prediction
       navigate("/profile");
     })
     .catch(error => {

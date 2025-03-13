@@ -99,8 +99,8 @@ db.serialize(() => {
 
     CREATE TABLE time_prediction (
     time_prediction_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    review_id INT NOT NULL,
-    predicted_class INT NOT NULL,
+    review_id INTEGER,
+    predicted_break INT NOT NULL,
     predicted_duration VARCHAR(50) NOT NULL,
     probabilities TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

@@ -44,7 +44,7 @@ module.exports.insertTimePrediction = (data, callback) => {
 
     pool.query(SQLSTATEMENT, VALUES, callback);
 };
-module.exports.getReviewById = (callback) => {
+module.exports.getReviewById = (data,callback) => {
     const SQLSTATEMENT = `
         SELECT *
         FROM Reviews

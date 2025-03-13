@@ -81,9 +81,10 @@ const Main = () => {
   };
   const sendEndTime = () => {
     const session_id = localStorage.getItem("session_id"); // Get the session ID from localStorage
+    const breakTime = breakTimeMinutes
     const endData = {
       session_id,
-      breakTimeMinutes
+      breakTime
     };
     if (!session_id) {
       console.error("No session ID found!");
@@ -94,7 +95,7 @@ const Main = () => {
     fetch("http://localhost:5000/api/study/end", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ endData }),
+      body: JSON.stringify(endData),
     })
       .then(response => response.json())
       .then(data => {
@@ -103,7 +104,7 @@ const Main = () => {
       })
       .catch(error => console.error("Error sending end time:", error));
   };
-  
+
   
 const startSession = () => {
   pauseBreakTimer();
@@ -125,6 +126,10 @@ const startSession = () => {
   };
 
   const resetSession = () => {
+    if (breakStartTime) {
+      const breakDurationSeconds = Math.floor((Date.now() - breakStartTime) / 1000); // Calculate break duration
+      setBreakTimeMinutes(prev => prev + Math.floor(breakDurationSeconds / 60)); // Convert to minutes and update state
+    }
     sendEndTime();
     resetStudyTimer();
     resetBreakTimer();
